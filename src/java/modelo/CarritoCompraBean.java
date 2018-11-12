@@ -53,7 +53,7 @@ public class CarritoCompraBean {
         this.total = total;
     }
 
-    public String crearCompra(String correo) throws Exception {
+    public String crearCompra(String correo, int tipo) throws Exception {
         if (!correo.equals("")) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
@@ -67,11 +67,9 @@ public class CarritoCompraBean {
                 carrito.setIdCarrito(idCarrito);
                 carrito.setIdUsuario(idUsuario);
                 carrito.setTotal(0);
-                
+
                 carritoFacade = new CarritosFacade();
-                carritoFacade.crearCarrito(carrito,correo);
-                
-                CarritoPojo car = carritoFacade.crearCarrito(carrito,correo);
+                CarritoPojo car = carritoFacade.crearCarrito(carrito, correo);
                 setIdCarrito(car.getIdCarrito());
                 setIdUsuario(car.getIdUsuario());
                 setTotal(car.getTotal());
@@ -82,13 +80,13 @@ public class CarritoCompraBean {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             String txtProperty = request.getParameter("myForm:movie");
             int idProduct = Integer.parseInt(txtProperty);
-            agregarCarrito(idProduct,1);//1.-Pelicula 2.-Serie
-            //return "carrito";
+            agregarCarrito(idProduct, tipo);//1.-Pelicula 2.-Serie
+            return "carrito";
         }
         return "Login";
     }
-    
-    public void agregarCarrito(int idProduct,int tipo) {
+
+    public void agregarCarrito(int idProduct, int tipo) {
         try {
             System.out.println("El producto que se agregara al carrito----- " + idProduct);
             CarritoProductoPojo car_product = new CarritoProductoPojo();
@@ -97,11 +95,15 @@ public class CarritoCompraBean {
             car_product.setCantidad(1);
             car_product.setIdCarrito(carProductFacade.getCarrito(idCarrito));
             car_product.setIdProducto(carProductFacade.getProducto(idProduct));
-            car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+            if (tipo == 1) {
+                car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+            } else {
+                car_product.setSubtotal(carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+            }
             car_product.setTipo_producto(tipo);
             car_product.setTipo_compra(1);
             carProductFacade.create(car_product);
-            
+
             Carritos editable = carProductFacade.getCarrito(idCarrito);
             editable.setTotal((double) Math.round((editable.getTotal() + car_product.getSubtotal()) * 100d) / 100d);
             System.out.println(editable.getTotal() + "Total de compraXDXDXDXD");

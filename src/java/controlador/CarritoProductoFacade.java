@@ -5,6 +5,7 @@ import entidad.Carritos;
 import entidad.Peliculas;
 import entidad.Productos;
 import entidad.Series;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -53,6 +54,10 @@ public class CarritoProductoFacade {
         Productos product = null;
         product = productoJpa.findProductos(idProducto);
         return serieJpa.findSeriesByProduct(product);
+    }
+
+    public List<CarritoProducto> filtrar(Carritos carrito) {
+        return carritoPJpa.obtenerCarrito(carrito);
     }
 
 }

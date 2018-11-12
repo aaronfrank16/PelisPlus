@@ -210,4 +210,22 @@ public class CarritoProductoJpaController implements Serializable {
         }
     }
     
+    public List<CarritoProducto> obtenerCarrito(Carritos idCarrito) {
+        List<CarritoProducto> compras;
+        EntityManager em = getEntityManager();
+        System.out.println("Buscando lista de compras de carrito : " + idCarrito);
+        Query consulta = em.createNamedQuery("CarritoProducto.findAll");
+        compras = consulta.getResultList();
+        for (int i = 0; i < compras.size(); i++) {
+            System.out.println(compras.get(i));
+        }
+        for (int i = 0; i < compras.size(); i++) {
+            if (!compras.get(i).getIdCarrito().equals(idCarrito)) {
+                System.out.println("Borre " + compras.get(i));
+                compras.remove(i);
+                i--;
+            }
+        }
+        return compras;
+    }
 }
