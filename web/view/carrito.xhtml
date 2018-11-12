@@ -21,13 +21,13 @@
                         <h:panelGrid columns="2">
                             <p:panel id="carro_compra" header="Carrito de Compras" style="margin-bottom:20px;font-size: 15pt;">
 
-                                <p:dataTable var="comp" value="#{detalleCompraBean.valores}">
+                                <p:dataTable var="comp" value="#{listaCarritoBean.lista_compras}">
                                     <p:column headerText="Nombre">
-                                        <h:outputText value="#{comp.idPelicula.titulo}" />
+                                        <h:outputText value="#{comp.idProducto.titulo}" />
                                     </p:column>
                                     
                                     <p:column headerText="Tipo">
-                                        <h:outputText value="Pelicula" />
+                                        <h:outputText value="#{listaCarritoBean.getTipo(comp.tipoProducto)}" />
                                     </p:column>
                                         
                                     <p:column headerText="Precio">
@@ -35,23 +35,6 @@
                                     </p:column>
 
                                 </p:dataTable>
-                                
-                                <p:dataTable var="comp" value="#{detalleCompraSerieBean.valores}">
-                                    <p:column headerText="Nombre">
-                                        <h:outputText value="#{comp.idSerie.titulo}" />
-                                    </p:column>
-                                    
-                                    <p:column headerText="Tipo">
-                                        <h:outputText value="Serie" />
-                                    </p:column>
-                                        
-                                    <p:column headerText="Precio">
-                                        <h:outputText value="#{comp.subtotal}" />
-                                    </p:column>
-
-                                </p:dataTable>
-
-
                             </p:panel>
                             <p:graphicImage library="img" name="car.png" style="width: 200px;"/>
                         </h:panelGrid>
@@ -81,7 +64,7 @@
                         <p:graphicImage library="img" name="pago.png" style="width: 185px;"/> 
                         <p:panel style="width: 250px;">
                             <h:outputText value="Total a Pagar: " style="font-size: 12pt;"/>
-                            <h:outputText value="$#{detalleCompraBean.total_pago}" style="font-size: 13pt;"/>
+                            <h:outputText value="$#{listaCarritoBean.total_pago}" style="font-size: 13pt;"/>
                         </p:panel>
                                                
                     </h:panelGroup>
