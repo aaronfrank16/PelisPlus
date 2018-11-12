@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Registro Pelicula</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name="materialize.min.css"/>
+        <h:outputScript library="js" name="materialize.min.js"/>
+    </h:head>
+    <ui:composition template="/Template/master.xhtml">
+        <ui:define name="content">
+            <h:body styleClass="cyan lighten-5">
+                <div class="row">
+                    <h:form class="col s12" title="Crear Pelicula">
+                                 
+    
+    <p:growl id="messages"/>
+ 
+    <p:menubar>
+        <p:submenu label="Agregar/eliminar" icon="ui-icon-circle-plus ">
+            <p:submenu label="Agregar" icon="ui-icon-video">
+                <p:menuitem value="Serie" url="CrearSerie.xhtml" />
+                <p:menuitem value="Pelicula" url="CrearPelicula.xhtml" />
+            </p:submenu>
+            <p:separator />
+            <p:submenu label="Eliminar" icon="ui-icon-trash">
+            <p:menuitem value="Serie" url="EliminarSerie.xhtml" />
+            <p:menuitem value="Pelicula" url="#" />
+            </p:submenu>
+        </p:submenu>
+   
+  <p:submenu label="Actualizar" icon="ui-icon-pin-w">
+            
+             <p:menuitem value="Serie" url="ActSerie.xhtml" />
+                 <p:separator />
+                <p:menuitem value="Pelicula" url="#" />
+  </p:submenu>
+    </p:menubar>
+                            <p:fieldset legend="Registro de peliculas">
+                            <p:panel id="panelPD" header="Datos Pelicula" style="margin-bottom:10px;">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="input-field col s2">                                            
+                                                <p:outputLabel for="txtTitulo" value="Titulo"/>
+                                                <p:inputText id="txtTitulo" value="#{pelibean.titulo}" required="true" requiredMessage="Campo Requerido" />
+                                                 <p:message for="txtTitulo"/>
+                                            </div>
+                                            <div class="input-field col s2">                                            
+                                                <p:outputLabel for="txtTipo" value="Tipo"/>
+                                                <p:inputText id="txtTipo" value="#{pelibean.tipo}" required="true" requiredMessage="Campo Requerido" >
+                                                
+                                                </p:inputText>
+                                                <p:message for="txtTipo"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="idC" value="Director"/>
+                                                <p:inputText id="idC" value="#{pelibean.director}" required="false" requiredMessage="Campo Requerido"/>
+                                                <p:message for="idC"/>
+                                            </div>
+                                             <div class="input-field col s5">
+                                                <p:outputLabel for="sinop" value="Sinopsis"/>
+                                                <p:inputText id="sinop" placeholder="Coloque la sinopsis completa hasta 255 caracteres" value="#{pelibean.sin}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="sinop"/>
+                                            </div>
+                                            
+                                            <div class="input-field col s2">                                            
+                                                <p:outputLabel for="txtCAT" value="id categoria"/>
+                                                <p:inputText id="txtCAT" value="#{pelibean.id_cat}" required="true" requiredMessage="Campo Requerido" >
+                                                </p:inputText>
+                                                <p:message for="txtTipo"/>
+                                            </div>
+                                           <div class="input-field col s2">
+                                                <p:outputLabel for="dur" value="Duracion"/>
+                                                <p:inputText id="dur" value="#{pelibean.duracion}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="dur"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="clas" value="Clasificacion"/>
+                                                <p:inputText id="clas" value="#{pelibean.clasificacion}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="clas"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="año" value="Año"/>
+                                                <p:inputText id="año" value="#{pelibean.año}" placeholder="Ej:1990" required="true" requiredMessage="Campo Requerido" >
+                                                    
+                                                </p:inputText>
+                                                <p:message for="año"/>
+                                            </div>
+                                             <div class="input-field col s2">
+                                                <p:outputLabel for="rat" value="Rating"/>
+                                                <p:inputText id="rat" value="#{pelibean.rating}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="rat"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="cant_alm" value="Cantidad almacen"/>
+                                                <p:inputText id="cant_alm" value="#{pelibean.cantidad_almacen}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="cant_alm"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="cant_ren" value="Cantidad renta"/>
+                                                <p:inputText id="cant_ren" value="#{pelibean.cantidad_renta}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="cant_ren"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="prec_c" value="Precio Compra"/>
+                                                <p:inputText id="prec_c" value="#{pelibean.precio_compra}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="prec_c"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="pre_r" value="Precio Renta"/>
+                                                <p:inputText id="pre_r" value="#{pelibean.precio_renta}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="pre_r"/>
+                                            </div>
+                                           </div>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                                <p:commandLink value="Registrar Pelicula" action="#{pelibean.alta()}" class="btn btn-large" update="panelPD"/>
+                        </p:fieldset>
+                    </h:form>
+                </div>
+                <h:outputScript library="js" name="materialize.min.js"/>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

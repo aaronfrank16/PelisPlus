@@ -21,6 +21,8 @@ import entidad.Productos;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 public class ProductosJpaController implements Serializable {
 
@@ -59,6 +61,7 @@ public class ProductosJpaController implements Serializable {
             if (idCategoria != null) {
                 idCategoria = em.getReference(idCategoria.getClass(), idCategoria.getIdCategoria());
                 productos.setIdCategoria(idCategoria);
+                System.out.println("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             }
             List<Peliculas> attachedPeliculasList = new ArrayList<Peliculas>();
             for (Peliculas peliculasListPeliculasToAttach : productos.getPeliculasList()) {
@@ -90,7 +93,10 @@ public class ProductosJpaController implements Serializable {
                 attachedDetalleRentaList.add(detalleRentaListDetalleRentaToAttach);
             }
             productos.setDetalleRentaList(attachedDetalleRentaList);
-            em.persist(productos);
+            
+           
+        em.persist(productos);
+    
             if (idCategoria != null) {
                 idCategoria.getProductosList().add(productos);
                 idCategoria = em.merge(idCategoria);

@@ -1,8 +1,11 @@
 
 package controlador;
 
+import controlador.exceptions.RollbackFailureException;
 import entidad.Productos;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -100,5 +103,14 @@ public class ProductosFacade {
     public List<Productos> listaSeries(){
         return productoJpa.getMejoresSeries();
     }
+    public void CrearP(Productos p){
+    try {
+            productoJpa.create(p);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(ProductosFacade.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ProductosFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
     
+    }
 }

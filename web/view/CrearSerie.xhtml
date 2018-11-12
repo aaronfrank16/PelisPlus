@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Registro</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name="materialize.min.css"/>
+        <h:outputScript library="js" name="materialize.min.js"/>
+    </h:head>
+    <ui:composition template="/Template/master.xhtml">
+        <ui:define name="content">
+            <h:body styleClass="cyan lighten-5">
+                <div class="row">
+                    <h:form class="col s12" title="Crear Serie">
+                        <p:growl id="messages"/>
+ 
+    <p:menubar>
+        <p:submenu label="Agregar/eliminar" icon="ui-icon-circle-plus ">
+            <p:submenu label="Agregar" icon="ui-icon-video">
+                <p:menuitem value="Serie" url="CrearSerie.xhtml" />
+                <p:menuitem value="Pelicula" url="CrearPelicula.xhtml" />
+            </p:submenu>
+            <p:separator />
+            <p:submenu label="Eliminar" icon="ui-icon-trash">
+            <p:menuitem value="Serie" url="EliminarSerie.xhtml" />
+            <p:menuitem value="Pelicula" url="#" />
+            </p:submenu>
+        </p:submenu>
+   
+  <p:submenu label="Actualizar" icon="ui-icon-pin-w">
+            
+             <p:menuitem value="Serie" url="ActSerie.xhtml" />
+                 <p:separator />
+                <p:menuitem value="Pelicula" url="#" />
+  </p:submenu>
+    </p:menubar>
+                        <p:fieldset legend="Registro de Series">
+                            <p:panel id="panelPD" header="Datos de la Serie" style="margin-bottom:10px;">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="input-field col s2">                                            
+                                                <p:outputLabel for="txtTitulo" value="Titulo"/>
+                                                <p:inputText id="txtTitulo" value="#{seriebean.titulo}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="txtTitulo"/>
+                                            </div>
+                                            <div class="input-field col s5">
+                                                <p:outputLabel for="sin" value="Sinopsis"/>
+                                                <p:inputText id="sin" value="#{seriebean.sinopsis}" required="false" requiredMessage="Campo Requerido"/>
+                                                <p:message for="sin"/>
+                                            </div>
+                                            <div class="input-field col s8">
+                                                <p:outputLabel for="no_temp" value="Numero de Temporadas"/>
+                                                <p:inputText id="no_temp" value="#{seriebean.no_temp}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="no_temp"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="est" value="Estudio"/>
+                                                <p:inputText id="est" value="#{seriebean.estudio}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="est"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="rat" value="Rating"/>
+                                                <p:inputText id="rat" value="#{seriebean.rating}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="rat"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="id_cat" value="Id de categoria"/>
+                                                <p:inputText id="id_cat" value="#{seriebean.id_cat}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="id_cat"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="ano" value="Año"/>
+                                                <p:inputText id="ano" value="#{seriebean.año}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="ano"/>
+                                            </div>
+                                            <div class="input-field col s2">
+                                                <p:outputLabel for="prec_com" value="Precio de compra"/>
+                                                <p:inputText id="prec_com" value="#{seriebean.precio_compra}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="prec_com"/>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                            <p:commandLink value="Registrar Serie" action="#{seriebean.alta()}" class="btn btn-large" update="panelPD"/>
+                        </p:fieldset>
+                    </h:form>
+                </div>
+                <h:outputScript library="js" name="materialize.min.js"/>
+ 
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>
