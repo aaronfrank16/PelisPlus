@@ -55,8 +55,8 @@
                                 </p:fieldset>
                             </p:panel>
                             <p:panel id="basic2" header="Opciones" style="margin-bottom:20px;padding-bottom: 40px;font-size: 15pt;">
-                                <h:commandLink value="Comprar" styleClass="btn btn-large" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #0091ea;width: 200px;margin-bottom: 10px;" action="#{carritoCompraBean.crearCompra(loginBean.correo,1)}"/>
-                                <h:commandLink value="Rentar" styleClass="btn btn-large" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #00C853;width: 200px;" action="#{rentaPeliculaBean.crearRenta(userLog.correo)}"/>
+                                <h:commandLink value="Comprar" styleClass="btn btn-large" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #0091ea;width: 200px;margin-bottom: 10px;" action="#{carritoCompraBean.crearCompra(loginBean.correo,1,1)}"/>
+                                <h:commandLink value="Rentar" styleClass="btn btn-large" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #00C853;width: 200px;" action="#{carritoCompraBean.crearCompra(loginBean.correo,1,2)}"/>
                             </p:panel>
 
                         </h:panelGrid>
