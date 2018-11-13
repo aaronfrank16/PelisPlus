@@ -92,7 +92,7 @@ public class LoginBean implements Serializable
                     } catch (IOException ex)
                     {
                     }
-                } else if (request.isUserInRole("almacen"))
+                } else if (request.isUserInRole("almacenista"))
                 {
                     try
                     {
