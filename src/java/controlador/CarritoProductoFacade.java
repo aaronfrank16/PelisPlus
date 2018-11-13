@@ -59,7 +59,7 @@ public class CarritoProductoFacade {
     public List<CarritoProducto> filtrar(Carritos carrito) {
         return carritoPJpa.obtenerCarrito(carrito);
     }
-    
+
     public List<CarritoProducto> filtrarR(Carritos carrito) {
         return carritoPJpa.obtenerCarritoR(carrito);
     }
@@ -67,6 +67,19 @@ public class CarritoProductoFacade {
     public void remove(Carritos carrito) throws Exception {
         List<CarritoProducto> registros = carritoPJpa.obtenerCompra(carrito);
         for (int i = 0; i < registros.size(); i++) {
+            if (registros.get(i).getIdProducto().getTipo() == 1) {
+                Peliculas peli = peliculaJpa.findPeliculasByProduct(productoJpa.findProductos(registros.get(i).getIdProducto().getIdProducto()));
+                if (registros.get(i).getTipoCompra() == 1) {
+                    peli.setCantidadAlmacen(peli.getCantidadAlmacen() + 1);
+                } else {
+                    peli.setCantidadRenta(peli.getCantidadRenta() + 1);
+                }
+                peliculaJpa.edit(peli);
+            } else {
+                Series serie = serieJpa.findSeriesByProduct(productoJpa.findProductos(registros.get(i).getIdProducto().getIdProducto()));
+                serie.setCantidadAlmacen(serie.getCantidadAlmacen()+1);
+                serieJpa.edit(serie);
+            }
             carritoPJpa.destroy(registros.get(i).getIdCarritoProducto());
         }
     }
