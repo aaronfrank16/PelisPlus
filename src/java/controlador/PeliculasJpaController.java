@@ -63,8 +63,9 @@ public class PeliculasJpaController implements Serializable {
     public void edit(Peliculas peliculas) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Peliculas persistentPeliculas = em.find(Peliculas.class, peliculas.getIdPelicula());
             Productos idProductoOld = persistentPeliculas.getIdProducto();
             Productos idProductoNew = peliculas.getIdProducto();

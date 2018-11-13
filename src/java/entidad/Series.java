@@ -59,6 +59,10 @@ public class Series implements Serializable {
     @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
     @ManyToOne(optional = false)
     private Productos idProducto;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "cantidad_almacen")
+    private int cantidadAlmacen;
 
     public Series() {
     }
@@ -114,6 +118,14 @@ public class Series implements Serializable {
         this.idProducto = idProducto;
     }
 
+    public int getCantidadAlmacen() {
+        return cantidadAlmacen;
+    }
+
+    public void setCantidadAlmacen(int cantidadAlmacen) {
+        this.cantidadAlmacen = cantidadAlmacen;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

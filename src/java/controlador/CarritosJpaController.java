@@ -158,8 +158,9 @@ public class CarritosJpaController implements Serializable {
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Carritos carritos;
             try {
                 carritos = em.getReference(Carritos.class, id);

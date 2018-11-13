@@ -1,4 +1,3 @@
-
 package controlador;
 
 import controlador.exceptions.NonexistentEntityException;
@@ -129,8 +128,9 @@ public class CarritoProductoJpaController implements Serializable {
     public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             CarritoProducto carritoProducto;
             try {
                 carritoProducto = em.getReference(CarritoProducto.class, id);
@@ -209,18 +209,58 @@ public class CarritoProductoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
     public List<CarritoProducto> obtenerCarrito(Carritos idCarrito) {
         List<CarritoProducto> compras;
         EntityManager em = getEntityManager();
         System.out.println("Buscando lista de compras de carrito : " + idCarrito);
-        Query consulta = em.createNamedQuery("CarritoProducto.findAll");
+        Query consulta = em.createNamedQuery("CarritoProducto.findByTipoCompra");
+        consulta.setParameter("tipoCompra", 1);
         compras = consulta.getResultList();
         for (int i = 0; i < compras.size(); i++) {
             System.out.println(compras.get(i));
         }
         for (int i = 0; i < compras.size(); i++) {
             if (!compras.get(i).getIdCarrito().equals(idCarrito)) {
+                System.out.println("Borre " + compras.get(i));
+                compras.remove(i);
+                i--;
+            }
+        }
+        return compras;
+    }
+
+    public List<CarritoProducto> obtenerCarritoR(Carritos idCarrito) {
+        List<CarritoProducto> compras;
+        EntityManager em = getEntityManager();
+        System.out.println("Buscando lista de compras de carrito : " + idCarrito);
+        Query consulta = em.createNamedQuery("CarritoProducto.findByTipoCompra");
+        consulta.setParameter("tipoCompra", 2);
+        compras = consulta.getResultList();
+        for (int i = 0; i < compras.size(); i++) {
+            System.out.println(compras.get(i));
+        }
+        for (int i = 0; i < compras.size(); i++) {
+            if (!compras.get(i).getIdCarrito().equals(idCarrito)) {
+                System.out.println("Borre " + compras.get(i));
+                compras.remove(i);
+                i--;
+            }
+        }
+        return compras;
+    }
+
+    List<CarritoProducto> obtenerCompra(Carritos carrito) {
+        List<CarritoProducto> compras;
+        EntityManager em = getEntityManager();
+        System.out.println("Buscando carrito de compra por idCarrito : " + carrito);
+        Query consulta = em.createNamedQuery("CarritoProducto.findAll");
+        compras = consulta.getResultList();
+        for (int i = 0; i < compras.size(); i++) {
+            System.out.println(compras.get(i));
+        }
+        for (int i = 0; i < compras.size(); i++) {
+            if (!compras.get(i).getIdCarrito().equals(carrito)) {
                 System.out.println("Borre " + compras.get(i));
                 compras.remove(i);
                 i--;

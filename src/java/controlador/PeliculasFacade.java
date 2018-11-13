@@ -29,5 +29,9 @@ public class PeliculasFacade{
             Logger.getLogger(PeliculasFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void update(Peliculas peli) throws Exception {
+        userJpa.edit(peli);
+    }
         
 }

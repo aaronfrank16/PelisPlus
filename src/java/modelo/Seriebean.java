@@ -27,24 +27,27 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class Seriebean {
 
-     private String Titulo;
-       private String Sinopsis;
-       private String Año;
+    private String Titulo;
+    private String Sinopsis;
+    private String Año;
     private double rating;
-     private int no_temp;
+    private int no_temp;
     private String estudio;
     private double precio_compra;
     private int id_prod;
     private int id_cat;
     private int tipo;
-     private SeriesFacade usfac=new SeriesFacade();
-    private ProductosFacade prodfac= new ProductosFacade();
-    private CategoriasFacade catfac= new CategoriasFacade();
-private FacesContext fc = FacesContext.getCurrentInstance();
- private Series seriec;
- private Productos prod;
- private Categorias cat;
- private ExternalContext ec = fc.getExternalContext();
+    private int cantidad_almacen;
+    
+    private SeriesFacade usfac = new SeriesFacade();
+    private ProductosFacade prodfac = new ProductosFacade();
+    private CategoriasFacade catfac = new CategoriasFacade();
+    private FacesContext fc = FacesContext.getCurrentInstance();
+    private Series seriec;
+    private Productos prod;
+    private Categorias cat;
+    private ExternalContext ec = fc.getExternalContext();
+
     public String getTitulo() {
         return Titulo;
     }
@@ -125,13 +128,20 @@ private FacesContext fc = FacesContext.getCurrentInstance();
         this.id_cat = id_cat;
     }
 
-    
-   
-    public Seriebean() {
+    public int getCantidad_almacen() {
+        return cantidad_almacen;
     }
-    
-     public void alta(){
-         System.out.println("Entra a metodo alta");
+
+    public void setCantidad_almacen(int cantidad_almacen) {
+        this.cantidad_almacen = cantidad_almacen;
+    }
+
+    public Seriebean() {
+        
+    }
+
+    public void alta() {
+        System.out.println("Entra a metodo alta");
 //       if(Titulo.equals("")) {
 //           fc.addMessage("", new FacesMessage("Te falta escribir el titulo"));
 //        }else if(tipo==0){
@@ -159,33 +169,32 @@ private FacesContext fc = FacesContext.getCurrentInstance();
 //        }
 //        
 //        else{
-            cat= catfac.buscar_cat(id_cat);
-           prod=new Productos();
-           prod.setIdCategoria(cat);
-           prod.setIdProducto(id_prod);
-           prod.setAño(Año);
-           prod.setTipo(tipo);
-           prod.setSinopsis(Sinopsis);
-          prod.setRating(rating);
-           prod.setTitulo(Titulo);
-           System.out.println(Titulo+"TITULOOOOOOOOOOOO");
-            seriec=new Series();
-            seriec.setNumeroTemporadas(no_temp);
-            seriec.setPrecioCompra(precio_compra);
-            seriec.setEstudio(estudio);
-            seriec.setIdProducto(prod);
-            
-            try{
-                prodfac.CrearP(prod);
-                usfac.CrearSerie(seriec);
-                System.out.println("Registro correcto");
-            }catch (Exception e){
-                
-                System.out.println("No se ingreso");}
-            
-            
+        cat = catfac.buscar_cat(id_cat);
+        prod = new Productos();
+        prod.setIdCategoria(cat);
+        prod.setIdProducto(id_prod);
+        prod.setAño(Año);
+        prod.setTipo(tipo);
+        prod.setSinopsis(Sinopsis);
+        prod.setRating(rating);
+        prod.setTitulo(Titulo);
+        System.out.println(Titulo + "TITULOOOOOOOOOOOO");
+        seriec = new Series();
+        seriec.setNumeroTemporadas(no_temp);
+        seriec.setPrecioCompra(precio_compra);
+        seriec.setEstudio(estudio);
+        seriec.setIdProducto(prod);
+        seriec.setCantidadAlmacen(cantidad_almacen);
+        try {
+            prodfac.CrearP(prod);
+            usfac.CrearSerie(seriec);
+            System.out.println("Registro correcto");
+        } catch (Exception e) {
+
+            System.out.println("No se ingreso");
+        }
+
 //        }
-  
-   }
-    
+    }
+
 }

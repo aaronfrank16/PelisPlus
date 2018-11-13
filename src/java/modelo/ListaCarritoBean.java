@@ -1,30 +1,33 @@
 package modelo;
 
 import controlador.CarritoProductoFacade;
+import controlador.ProductosFacade;
 import entidad.CarritoProducto;
+import entidad.Productos;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 
-/**
- *
- * @author aaron
- */
 @Named(value = "listaCarritoBean")
 @RequestScoped
 public class ListaCarritoBean {
 
     private List<CarritoProducto> lista_compras;
+    private List<CarritoProducto> lista_rentas;
     private double total_pago;
-    
+
     private CarritoProductoFacade carritoPFacade;
+    private ProductosFacade productFacade;
 
     public ListaCarritoBean() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
         carritoPFacade = new CarritoProductoFacade();
         this.lista_compras = (carritoPFacade.filtrar(carritoPFacade.getCarrito(neededBean.getIdCarrito())));
+        this.lista_rentas = (carritoPFacade.filtrarR(carritoPFacade.getCarrito(neededBean.getIdCarrito())));
         double aux = 0;
         try {
             aux = carritoPFacade.getCarrito(neededBean.getIdCarrito()).getTotal();
@@ -48,13 +51,55 @@ public class ListaCarritoBean {
 
     public void setTotal_pago(double total_pago) {
         this.total_pago = total_pago;
-    }  
-    
-    public String getTipo(int tipo){
-        if (tipo==1) {
+    }
+
+    public List<CarritoProducto> getLista_rentas() {
+        return lista_rentas;
+    }
+
+    public void setLista_rentas(List<CarritoProducto> lista_rentas) {
+        this.lista_rentas = lista_rentas;
+    }
+
+    public String getTipo(int tipo) {
+        if (tipo == 1) {
             return "Pelicula";
-        }else{
+        } else {
             return "Serie";
         }
+    }
+
+    public double getPrecioCompra(Productos idProducto) {
+        double precio = 0;
+        productFacade = new ProductosFacade();
+        if (idProducto.getTipo() == 1) {
+            precio = productFacade.buscarPelicula(idProducto.getIdProducto()).getPelicula().getPrecioCompra();
+        } else {
+            precio = productFacade.buscarSerie(idProducto.getIdProducto()).getSerie().getPrecioCompra();
+        }
+        return precio;
+    }
+
+    public double getPrecioRent(Productos idProducto) {
+        double precio = 0;
+        productFacade = new ProductosFacade();
+        precio = productFacade.buscarPelicula(idProducto.getIdProducto()).getPelicula().getPrecioRenta();
+        return precio;
+    }
+
+    public String getFecha() {
+        Calendar fecha = Calendar.getInstance();
+        Date now = fecha.getTime();
+        fecha.add(Calendar.DAY_OF_YEAR, 30);
+        Date agregado = fecha.getTime();
+        return now + "";
+    }
+
+    public String getFechaEntrega() {
+        Calendar fecha = Calendar.getInstance();
+        Date now = fecha.getTime();
+        fecha.add(Calendar.DAY_OF_YEAR, 30);
+        Date agregado = fecha.getTime();
+        return agregado + "";
     }
 }

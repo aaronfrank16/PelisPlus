@@ -31,5 +31,9 @@ public class SeriesFacade{
             Logger.getLogger(SeriesFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void update(Series serie) throws Exception {
+        userJpa.edit(serie);
+    }
     
 }

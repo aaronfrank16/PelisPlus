@@ -4,8 +4,12 @@ import controlador.CarritoPojo;
 import controlador.CarritoProductoFacade;
 import controlador.CarritoProductoPojo;
 import controlador.CarritosFacade;
+import controlador.PeliculasFacade;
+import controlador.ProductosFacade;
+import controlador.SeriesFacade;
 import entidad.Carritos;
-import entidad.Productos;
+import entidad.Peliculas;
+import entidad.Series;
 import entidad.Usuarios;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +28,9 @@ public class CarritoCompraBean {
 
     private CarritosFacade carritoFacade;
     private CarritoProductoFacade carProductFacade;
+    private ProductosFacade productFacade;
+    private PeliculasFacade peliculaFacade = new PeliculasFacade();
+    private SeriesFacade serieFacade = new SeriesFacade();
 
     public CarritoCompraBean() {
 
@@ -53,7 +60,7 @@ public class CarritoCompraBean {
         this.total = total;
     }
 
-    public String crearCompra(String correo, int tipo) throws Exception {
+    public String crearCompra(String correo, int tipo, int tipo_compra) throws Exception {
         if (!correo.equals("")) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
@@ -80,35 +87,64 @@ public class CarritoCompraBean {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             String txtProperty = request.getParameter("myForm:movie");
             int idProduct = Integer.parseInt(txtProperty);
-            agregarCarrito(idProduct, tipo);//1.-Pelicula 2.-Serie
+            agregarCarrito(idProduct, tipo, tipo_compra);//1.-Pelicula 2.-Serie || 1.-Compra 2.-Renta
             return "carrito";
         }
         return "Login";
     }
 
-    public void agregarCarrito(int idProduct, int tipo) {
+    public void agregarCarrito(int idProduct, int tipo, int tipo_compra) {
         try {
             System.out.println("El producto que se agregara al carrito----- " + idProduct);
-            CarritoProductoPojo car_product = new CarritoProductoPojo();
+            productFacade = new ProductosFacade();
             carProductFacade = new CarritoProductoFacade();
-            car_product.setIdCarritoProducto(idCarrito);
-            car_product.setCantidad(1);
-            car_product.setIdCarrito(carProductFacade.getCarrito(idCarrito));
-            car_product.setIdProducto(carProductFacade.getProducto(idProduct));
+            int cantAC = 0;
             if (tipo == 1) {
-                car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
-            } else {
-                car_product.setSubtotal(carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                if (tipo_compra == 1) {
+                    cantAC = productFacade.buscarPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPelicula().getCantidadAlmacen();
+                } else {
+                    cantAC = productFacade.buscarPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPelicula().getCantidadRenta();
+                }
+            } else if (tipo == 2) {
+                cantAC = productFacade.buscarSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getSerie().getCantidadAlmacen();
             }
-            car_product.setTipo_producto(tipo);
-            car_product.setTipo_compra(1);
-            carProductFacade.create(car_product);
+            if (cantAC == 0) {
+                System.out.println("No hay productos en existencia");
+            } else {
+                CarritoProductoPojo car_product = new CarritoProductoPojo();
+                car_product.setIdCarritoProducto(idCarrito);
+                car_product.setCantidad(1);
+                car_product.setIdCarrito(carProductFacade.getCarrito(idCarrito));
+                car_product.setIdProducto(carProductFacade.getProducto(idProduct));
+                if (tipo == 1) {
+                    car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                } else {
+                    car_product.setSubtotal(carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                }
+                car_product.setTipo_producto(tipo);
+                car_product.setTipo_compra(tipo_compra);
+                carProductFacade.create(car_product);
 
-            Carritos editable = carProductFacade.getCarrito(idCarrito);
-            editable.setTotal((double) Math.round((editable.getTotal() + car_product.getSubtotal()) * 100d) / 100d);
-            System.out.println(editable.getTotal() + "Total de compraXDXDXDXD");
-            carritoFacade = new CarritosFacade();
-            carritoFacade.update(editable);
+                Carritos editable = carProductFacade.getCarrito(idCarrito);
+                editable.setTotal((double) Math.round((editable.getTotal() + car_product.getSubtotal()) * 100d) / 100d);
+                System.out.println(editable.getTotal() + "Total de compraXDXDXDXD");
+                carritoFacade = new CarritosFacade();
+                carritoFacade.update(editable);
+
+                if (tipo == 1) {
+                    Peliculas peli = carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto());
+                    if (tipo_compra == 1) {
+                        peli.setCantidadAlmacen(peli.getCantidadAlmacen() - 1);
+                    } else {
+                        peli.setCantidadRenta(peli.getCantidadRenta() - 1);
+                    }
+                    peliculaFacade.update(peli);
+                } else {
+                    Series serie = carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto());
+                    serie.setCantidadAlmacen(serie.getCantidadAlmacen() - 1);
+                    serieFacade.update(serie);
+                }
+            }
         } catch (Exception ex) {
             System.out.println(ex);
         }

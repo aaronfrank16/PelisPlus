@@ -62,8 +62,9 @@ public class SeriesJpaController implements Serializable {
     public void edit(Series series) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Series persistentSeries = em.find(Series.class, series.getIdSerie());
             Productos idProductoOld = persistentSeries.getIdProducto();
             Productos idProductoNew = series.getIdProducto();

@@ -59,5 +59,16 @@ public class CarritoProductoFacade {
     public List<CarritoProducto> filtrar(Carritos carrito) {
         return carritoPJpa.obtenerCarrito(carrito);
     }
+    
+    public List<CarritoProducto> filtrarR(Carritos carrito) {
+        return carritoPJpa.obtenerCarritoR(carrito);
+    }
+
+    public void remove(Carritos carrito) throws Exception {
+        List<CarritoProducto> registros = carritoPJpa.obtenerCompra(carrito);
+        for (int i = 0; i < registros.size(); i++) {
+            carritoPJpa.destroy(registros.get(i).getIdCarritoProducto());
+        }
+    }
 
 }
