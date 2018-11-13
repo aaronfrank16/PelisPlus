@@ -216,7 +216,7 @@ public class RegistroBean {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Información"));
             try {
                 FacesContext contex = FacesContext.getCurrentInstance();
-                contex.getExternalContext().redirect("/Blockbuster/faces/view/Login.xhtml");
+                contex.getExternalContext().redirect("/PelisPlus/faces/view/Login.xhtml");
             } catch (Exception e) {
                 System.out.println("No voy");
             }
