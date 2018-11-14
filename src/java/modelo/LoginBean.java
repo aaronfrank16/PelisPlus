@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -71,7 +73,7 @@ public class LoginBean implements Serializable
         if (correo.isEmpty() || contraseña.isEmpty())
         {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Los datos no son validos", "Error"));
-        } else if (usuarioFacade.buscarUsuario(correo, contraseña))
+        } else
         {
             UsuarioPojo userPojo = usuarioFacade.buscarPorcorreo(correo);
             if (userPojo != null)
@@ -83,6 +85,7 @@ public class LoginBean implements Serializable
                 session = (HttpSession) context.getExternalContext().getSession(true);
                 session.setAttribute("validado", validado);
                 HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+                
                 if (request.isUserInRole("comprador"))
                 {
                     try
@@ -91,6 +94,7 @@ public class LoginBean implements Serializable
                         context.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
                     } catch (IOException ex)
                     {
+                        System.out.println("NO funcina");
                     }
                 } else if (request.isUserInRole("almacenista"))
                 {
@@ -100,6 +104,7 @@ public class LoginBean implements Serializable
                         context.getExternalContext().redirect("/PelisPlus/faces/view/Catalogo_Series.xhtml");
                     } catch (IOException ex)
                     {
+                        Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -121,20 +126,18 @@ public class LoginBean implements Serializable
 //                    System.out.println("No voy");
 //                    System.out.println("HOLA: "+session.getId());
 //                }
-        } else
-        {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Usuario no hallado", "Advertencia"));
-        }
+        } 
     }
 
     public void cambioSesion()
     {
-//        FacesContext context = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) ec.getSession(false);
 
         System.out.println("Sesion nueva: " + session.isNew());
         System.out.println("id sesion: " + session.getId());
         session.invalidate();
+        context.getExternalContext().invalidateSession();
         session = (HttpSession) ec.getSession(true);
 
         System.out.println("Sesion nueva: " + session.isNew());

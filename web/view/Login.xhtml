@@ -17,7 +17,6 @@ and open the template in the editor.
         <h:outputScript library="js" name="materialize.min.js"/>
     </h:head>
     <ui:composition template="/Template/master.xhtml">
-
         <ui:define name="content">
             <h:body styleClass="cyan lighten-5">
                 <div class="valign-wrapper" id="login-page">
@@ -33,7 +32,9 @@ and open the template in the editor.
                                                     <p:growl autoUpdate="true"/>
                                                     <div class="row">
                                                         <div class="col s12 input-field">
-                                                            <p:inputText id="username" value="#{loginBean.correo}" required="false" requiredMessage="Usuario es Requerido"/>
+                                                            <p:inputText id="username" value="#{loginBean.correo}" required="false" requiredMessage="Usuario es Requerido">
+                                                                <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[\p{L}\p{M}\p{N}.-]*(\.[\p{L}\p{M}]{2,})$"/>
+                                                            </p:inputText>
                                                             <p:outputLabel for="username" value="Correo"/>
                                                         </div>
                                                         <div class="col s12 input-field">
