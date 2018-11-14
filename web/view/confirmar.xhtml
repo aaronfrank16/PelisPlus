@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Confirmar</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,9 +14,9 @@
         <h:outputScript library="js" name="materialize.min.js"/>
         <h:outputStylesheet library="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     </h:head>
-        <ui:composition template="/Template/master.xhtml">
-            <ui:define name="content">
-                <h:body styleClass="cyan lighten-5">
+    <ui:composition template="/Template/master.xhtml">
+        <ui:define name="content">
+            <h:body styleClass="cyan lighten-5">
                 <h:form class="col s12">
                     <br/>
                     <div class="row">
@@ -64,8 +65,8 @@
                     <p:fieldset legend="Total de Pago">
                         <h:outputText value="#{listaCarritoBean.total_pago}"/>
                     </p:fieldset>
-                    
-                    
+
+
                     <br/>
                     <p:fieldset legend="Datos de pago">
                         <p:dataTable value="DatosPago">
@@ -76,10 +77,20 @@
                                 <h:outputText value="CVV"/>
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{datosPagoPeliculaBean.tarjeta}" /><br/>
-                                <p:inputText value="#{datosPagoPeliculaBean.contraseña}" /><br/>
-                                <p:inputText value="#{datosPagoPeliculaBean.fecha_caducidad}" /><br/>
-                                <p:inputText value="#{datosPagoPeliculaBean.cvv}" /><br/>
+                                <p:inputText value="#{datosPagoPeliculaBean.tarjeta}" requiredMessage="Campo requerido">
+                                    <f:validateLength minimum="16" maximum="16"/>
+                                </p:inputText>
+                                <br/>
+                                <p:inputText value="#{datosPagoPeliculaBean.contraseña}" requiredMessage="Campo requerido">
+                                </p:inputText>
+                                <br/>
+                                <p:inputText value="#{datosPagoPeliculaBean.fecha_caducidad}" requiredMessage="Campo requerido">
+                                </p:inputText>
+                                <br/>
+                                <p:inputText value="#{datosPagoPeliculaBean.cvv}" validatorMessage="Campo requerido">
+                                    <f:validateLength minimum="3" maximum="4"/>
+                                </p:inputText>
+                                <br/>
                             </p:column>
                         </p:dataTable>
                     </p:fieldset>
@@ -88,7 +99,7 @@
                     <p:commandLink value="Cancelar" styleClass="btn btn-large" style="background-color: #FF1744;font-size: 12pt;margin-left: 10px;color: white" action="#{datosPagoPeliculaBean.regresar()}"/>
                 </h:form>
             </h:body>
-            </ui:define>
-        </ui:composition>
+        </ui:define>
+    </ui:composition>
 </html>
 
