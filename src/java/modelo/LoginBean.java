@@ -2,6 +2,7 @@ package modelo;
 
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
+import entidad.Usuarios;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -13,6 +14,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.primefaces.context.RequestContext;
 
 @Named(value = "loginBean")
 @SessionScoped
@@ -29,6 +31,7 @@ public class LoginBean implements Serializable
     private ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 
     private UsuariosFacade usuarioFacade;
+    private UsuarioPojo usuario = new UsuarioPojo();
 
     public LoginBean()
     {
@@ -67,47 +70,82 @@ public class LoginBean implements Serializable
 
     public void submit()
     {
-        FacesContext context = FacesContext.getCurrentInstance();
-        usuarioFacade = new UsuariosFacade();
-        setCorreo(correo);
-        if (correo.isEmpty() || contraseña.isEmpty())
+        UsuarioPojo user = new UsuarioPojo();
+        user.setCorreo(correo);
+        user.setContraseña(contraseña);
+        
+        usuario = usuarioFacade.buscarPorcorreo(correo);
+        if (usuario != null)
         {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Los datos no son validos", "Error"));
-        } else
+            activado = false;
+            this.correo = usuario.getCorreo();
+            this.contraseña = usuario.getContraseña();
+        }
+        
+        cambioSesion();
+        validado = true;
+        session = (HttpSession) ec.getSession(false);
+        session.setAttribute("validado", validado);
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        RequestContext context = RequestContext.getCurrentInstance();
+        System.out.println("VOY A ENTRAR AL IF");
+        if (request.isUserInRole("comprador"))
         {
-            UsuarioPojo userPojo = usuarioFacade.buscarPorcorreo(correo);
-            if (userPojo != null)
+            try
             {
-                activado = false;
-
-                cambioSesion();
-                validado = true;
-                session = (HttpSession) context.getExternalContext().getSession(true);
-                session.setAttribute("validado", validado);
-                HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-                
-                if (request.isUserInRole("comprador"))
-                {
-                    try
-                    {
-                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
-                        context.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
-                    } catch (IOException ex)
-                    {
-                        System.out.println("NO funcina");
-                    }
-                } else if (request.isUserInRole("almacenista"))
-                {
-                    try
-                    {
-                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Catalogo_Series.xhtml");
-                        context.getExternalContext().redirect("/PelisPlus/faces/view/Catalogo_Series.xhtml");
-                    } catch (IOException ex)
-                    {
-                        Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
+                System.out.println("HOLA ESTOY EN EL IF");
+            } catch (IOException ex)
+            {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            System.out.println("VALIO VERGA EL IF");
+        }
+        
+        //Desde aqui si funcionaba
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        usuarioFacade = new UsuariosFacade();
+//        setCorreo(correo);
+//        if (correo.isEmpty() || contraseña.isEmpty())
+//        {
+//            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Los datos no son validos", "Error"));
+//        } else
+//        {
+//            UsuarioPojo userPojo = usuarioFacade.buscarPorcorreo(correo);
+//            if (userPojo != null)
+//            {
+//                activado = false;
+//
+//                cambioSesion();
+//                validado = true;
+//                session = (HttpSession) context.getExternalContext().getSession(true);
+//                session.setAttribute("validado", validado);
+//                HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+//                
+//                if (request.isUserInRole("comprador"))
+//                {
+//                    try
+//                    {
+//                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
+//                        context.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
+//                    } catch (IOException ex)
+//                    {
+//                        System.out.println("NO funcina");
+//                    }
+//                } else if (request.isUserInRole("almacenista"))
+//                {
+//                    try
+//                    {
+//                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Catalogo_Series.xhtml");
+//                        context.getExternalContext().redirect("/PelisPlus/faces/view/Catalogo_Series.xhtml");
+//                    } catch (IOException ex)
+//                    {
+//                        Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            }
+        ///HAcia arriba si funcionaba
 //                activado = false;
 //                cambioSesion();
 //                validado = true;
@@ -126,18 +164,16 @@ public class LoginBean implements Serializable
 //                    System.out.println("No voy");
 //                    System.out.println("HOLA: "+session.getId());
 //                }
-        } 
+//        } 
     }
 
     public void cambioSesion()
     {
-        FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) ec.getSession(false);
 
         System.out.println("Sesion nueva: " + session.isNew());
         System.out.println("id sesion: " + session.getId());
         session.invalidate();
-        context.getExternalContext().invalidateSession();
         session = (HttpSession) ec.getSession(true);
 
         System.out.println("Sesion nueva: " + session.isNew());
