@@ -82,7 +82,7 @@ public class UsuariosFacade {
         if (userPojo != null) {
             valido = validarUsuario(userPojo, contraseña);
             if (valido) {
-                System.out.println("Es valido");
+                System.out.println("Es valido ********************************");
                 return true;
             } else {
                 System.out.println("No es valido");
