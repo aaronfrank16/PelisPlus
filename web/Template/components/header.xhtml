@@ -20,17 +20,17 @@
                         <h:panelGrid columns="2" style="text-decoration: none">
                             <p:inputText style="margin-right:50px" placeholder="Buscar"/>
                             <c:choose>
-                                <c:when test="#{loginBean.IsOffline(loginBean.correo)}">
+                                <c:when test="#{logBean.IsOffline()}">
                                     <h:commandLink value="Iniciar Sesión" styleClass="btn btn-large" action="Login.xhtml" style="margin-right: 15px;border-radius: 5px;font-size: 13pt;color: white;background-color: #0091ea;"/>                        
                                 </c:when>                          
-                                <c:when test="#{loginBean.IsOnline(loginBean.correo)}">                                
-                                    <p:menuButton value="Usuario: #{loginBean.correo}" style="margin-right: 15px" iconPos="ui-icon-person">
+                                <c:when test="#{logBean.IsOnline()}">                                
+                                    <p:menuButton value="Usuario: #{logBean.correoSesion}" style="margin-right: 15px" iconPos="ui-icon-person">
                                         <p:menuitem id="carrito" value="Carrito" action="carrito.xhtml" icon="ui-icon-cart"/>
                                         <p:menuitem id="HistU" value="Historial" action="Historial-Usuario.xhtml" icon="ui-icon-pencil"/>  
                                         <p:menuitem id="DatU" value="Modificar Datos" action="EditarUsuario.xhtml" icon="ui-icon-person"/> 
                                         <p:menuitem id="altaPeliculas" value="Alta Peliculas" action="CrearPelicula.xhtml" icon="ui-icon-disk" />
                                         <p:menuitem id="altaSeries" value="Alta Series" action="CrearSerie.xhtml" icon="ui-icon-disk" /> 
-                                        <p:menuitem value="Logout" action="#{loginBean.logOutUser()}" icon="ui-icon-power"/>
+                                        <p:menuitem value="Logout" action="#{logBean.logOutUser()}" icon="ui-icon-power"/>
                                     </p:menuButton>                           
                                 </c:when>
                                 
