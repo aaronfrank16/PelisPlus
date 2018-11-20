@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.transaction.UserTransaction;
 
 /**
@@ -28,11 +29,10 @@ import javax.transaction.UserTransaction;
  */
 public class RentasJpaController implements Serializable {
 
-    public RentasJpaController(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
+    public RentasJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    private UserTransaction utx = null;
+    private EntityTransaction utx = null;
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -45,8 +45,9 @@ public class RentasJpaController implements Serializable {
         }
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Usuarios idUsuario = rentas.getIdUsuario();
             if (idUsuario != null) {
                 idUsuario = em.getReference(idUsuario.getClass(), idUsuario.getIdUsuario());

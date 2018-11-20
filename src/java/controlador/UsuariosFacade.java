@@ -60,6 +60,15 @@ public class UsuariosFacade {
         user.setRol(usuario.getRol());
         return user;
     }
+    
+    public Usuarios buscarPorcorreo2(String Correo) {
+        UsuarioPojo user = new UsuarioPojo();
+        Usuarios usuario = userJpa.findByCorreo(Correo);
+        user.setContraseña(usuario.getContraseña());
+        user.setCorreo(usuario.getCorreo());
+        user.setRol(usuario.getRol());
+        return usuario;
+    }
 
     public boolean buscarUsuario(String correo, String contraseña) {
         Usuarios userPojo;

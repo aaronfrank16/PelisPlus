@@ -3,20 +3,19 @@ package modelo;
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
 import java.io.IOException;
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Named(value = "loginBean")
-@SessionScoped
-public class LoginBean implements Serializable {
+@Named(value = "logBean")
+@RequestScoped
+public class LogBean {
 
     private String correo;
     private String contraseña;
@@ -29,7 +28,7 @@ public class LoginBean implements Serializable {
 
     private UsuariosFacade usuarioFacade;
 
-    public LoginBean() {
+    public LogBean() {
 
     }
 
@@ -72,21 +71,24 @@ public class LoginBean implements Serializable {
                 validado = true;
                 session = (HttpSession) context.getExternalContext().getSession(true);
                 session.setAttribute("validado", validado);
+                session.setAttribute("rol", userPojo.getRol());
+                session.setAttribute("email", userPojo.getCorreo());
+                session.setAttribute("idCarrito", 0);
                 HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-
-                if (request.isUserInRole("comprador")) {
+                if (session.getAttribute("rol").equals("comprador")) {
+                    //if (request.isUserInRole("comprador")) {
                     try {
-                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
-                        context.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
+                        FacesContext contex = FacesContext.getCurrentInstance();
+                        contex.getExternalContext().redirect("/Blockbuster/faces/view/Home.xhtml");
                     } catch (IOException ex) {
                         System.out.println("NO funcina");
                     }
                 } else if (request.isUserInRole("almacenista")) {
                     try {
-                        ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Catalogo_Series.xhtml");
-                        context.getExternalContext().redirect("/PelisPlus/faces/view/Catalogo_Series.xhtml");
+                        ec.redirect(ec.getRequestContextPath() + "/Blockbuster/faces/view/Catalogo_Series.xhtml");
+                        context.getExternalContext().redirect("/Blockbuster/faces/view/Catalogo_Series.xhtml");
                     } catch (IOException ex) {
-                        Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(LogBean.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -144,18 +146,35 @@ public class LoginBean implements Serializable {
         return "Login.xhtml?faces-redirect=true";
     }
 
-    public boolean IsOnline(String email) {
-        if (email.isEmpty()) {
+    public boolean IsOnline() {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            session = (HttpSession) context.getExternalContext().getSession(false);
+            if (!(boolean) session.getAttribute("validado")) {
+                return false;
+            }
+            return true;
+        } catch (NullPointerException e) {
             return false;
         }
-        return true;
     }
 
-    public boolean IsOffline(String email) {
-        if (email.isEmpty()) {
+    public boolean IsOffline() {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            session = (HttpSession) context.getExternalContext().getSession(false);
+            if (!(boolean) session.getAttribute("validado")) {
+                return true;
+            }
+            return false;
+        }catch(NullPointerException e){
             return true;
         }
-        return false;
+    }
+
+    public String getCorreoSesion() {
+        session = (HttpSession) ec.getSession(false);
+        return session.getAttribute("email").toString();
     }
 
 }
