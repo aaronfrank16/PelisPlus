@@ -13,7 +13,8 @@
     <class>entidad.Rentas</class>
     <class>entidad.Series</class>
     <class>entidad.Usuarios</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <class>entidad.DatosPago</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
 </persistence>
