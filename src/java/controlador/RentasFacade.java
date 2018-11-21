@@ -3,6 +3,8 @@ package controlador;
 
 import entidad.Compras;
 import entidad.Rentas;
+import entidad.Usuarios;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,7 +21,7 @@ public class RentasFacade{
         
     }
 
-    public void create(RentaPojo rentaPojo) throws Exception {
+    public int create(RentaPojo rentaPojo) throws Exception {
         Rentas renta = new Rentas();
         renta.setFechaDevolucion(rentaPojo.getFecha_devolucion());
         renta.setFechaEntrega(rentaPojo.getFecha_entrega());
@@ -30,6 +32,19 @@ public class RentasFacade{
         renta.setTotalRenta(rentaPojo.getTotal_renta());
         
         rentaJpa.create(renta);
+        return renta.getIdRenta();
+    }
+    
+    public Rentas getRenta(int id){
+        return rentaJpa.findRentas(id);
+    }
+
+    public void edit(Rentas rentas) throws Exception {
+        rentaJpa.edit(rentas);
+    }
+
+    public List<Rentas> listaRentas(Usuarios idUsuario) {
+        return rentaJpa.findRentasbyUser(idUsuario);
     }
     
 }

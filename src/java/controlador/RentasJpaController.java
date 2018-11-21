@@ -91,8 +91,9 @@ public class RentasJpaController implements Serializable {
     public void edit(Rentas rentas) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Rentas persistentRentas = em.find(Rentas.class, rentas.getIdRenta());
             Usuarios idUsuarioOld = persistentRentas.getIdUsuario();
             Usuarios idUsuarioNew = rentas.getIdUsuario();
@@ -251,6 +252,22 @@ public class RentasJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public List<Rentas> findRentasbyUser(Usuarios id) {
+        List<Rentas> rentas = null;
+        EntityManager em = getEntityManager();
+        System.out.println("Buscado rentas por User "+id);
+        Query consulta = em.createNamedQuery("Rentas.findByidUsuario");
+        consulta.setParameter("idUsuario", id);
+        rentas = consulta.getResultList();
+        em.close();
+        if (!rentas.isEmpty()) {
+            System.out.println("Rentas encontradas");
+        }else{
+            System.out.println("No la encontre");
+        }
+        return rentas;
     }
     
 }

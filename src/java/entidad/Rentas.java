@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Rentas.findByFechaRenta", query = "SELECT r FROM Rentas r WHERE r.fechaRenta = :fechaRenta")
     , @NamedQuery(name = "Rentas.findByFechaDevolucion", query = "SELECT r FROM Rentas r WHERE r.fechaDevolucion = :fechaDevolucion")
     , @NamedQuery(name = "Rentas.findByFechaEntrega", query = "SELECT r FROM Rentas r WHERE r.fechaEntrega = :fechaEntrega")
-    , @NamedQuery(name = "Rentas.findByTotalRenta", query = "SELECT r FROM Rentas r WHERE r.totalRenta = :totalRenta")})
+    , @NamedQuery(name = "Rentas.findByTotalRenta", query = "SELECT r FROM Rentas r WHERE r.totalRenta = :totalRenta")
+    ,@NamedQuery(name = "Rentas.findByidUsuario", query = "SELECT r FROM Rentas r WHERE r.idUsuario = :idUsuario")})
 public class Rentas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -181,5 +182,5 @@ public class Rentas implements Serializable {
     public String toString() {
         return "entidad.Rentas[ idRenta=" + idRenta + " ]";
     }
-    
+
 }

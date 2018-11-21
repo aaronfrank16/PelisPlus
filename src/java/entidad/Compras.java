@@ -39,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Compras.findByIdCompra", query = "SELECT c FROM Compras c WHERE c.idCompra = :idCompra")
     , @NamedQuery(name = "Compras.findByTotalCompra", query = "SELECT c FROM Compras c WHERE c.totalCompra = :totalCompra")
     , @NamedQuery(name = "Compras.findByFechaCompra", query = "SELECT c FROM Compras c WHERE c.fechaCompra = :fechaCompra")
-    , @NamedQuery(name = "Compras.findByFechaEntrega", query = "SELECT c FROM Compras c WHERE c.fechaEntrega = :fechaEntrega")})
+    , @NamedQuery(name = "Compras.findByFechaEntrega", query = "SELECT c FROM Compras c WHERE c.fechaEntrega = :fechaEntrega")
+    ,@NamedQuery(name = "Compras.findByidUsuario", query = "SELECT c FROM Compras c WHERE c.idUsuario = :idUsuario")})
 public class Compras implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -163,5 +164,5 @@ public class Compras implements Serializable {
     public String toString() {
         return "entidad.Compras[ idCompra=" + idCompra + " ]";
     }
-    
+
 }

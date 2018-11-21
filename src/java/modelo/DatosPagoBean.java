@@ -6,10 +6,16 @@ import controlador.ComprasFacade;
 import controlador.ComprasPojo;
 import controlador.DatosPagoFacade;
 import controlador.DatosPagoPojo;
+import controlador.DetalleCompraFacade;
+import controlador.DetalleRentaFacade;
 import controlador.RentaPojo;
 import controlador.RentasFacade;
 import controlador.UsuariosFacade;
 import entidad.CarritoProducto;
+import entidad.Compras;
+import entidad.DetalleCompra;
+import entidad.DetalleRenta;
+import entidad.Rentas;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -37,8 +44,11 @@ public class DatosPagoBean {
     private DatosPagoFacade datosFacade;
     private ComprasFacade comprasFacade;
     private RentasFacade rentasFacade;
+    
+    private DetalleCompraFacade detalleComprasFacade;
+    private DetalleRentaFacade detalleRentasFacade;
 
-    private CarritosFacade carritoFacade;
+    private CarritosFacade carFacade;
     private CarritoProductoFacade carritoProductoFacade;
 
     public DatosPagoBean() {
@@ -100,11 +110,9 @@ public class DatosPagoBean {
             datosPojo.setTarjeta(tarjeta);
             int idCar = datosFacade.registro(datosPojo);
 
-            //Vaciar carrito en detalle-compras y detalle-rentas
             comprasFacade = new ComprasFacade();
             rentasFacade = new RentasFacade();
 
-            carritoFacade = new CarritosFacade();
             carritoProductoFacade = new CarritoProductoFacade();
 
             ComprasPojo compraPojo = new ComprasPojo();
@@ -128,8 +136,21 @@ public class DatosPagoBean {
                 rentaPojo.setFecha_entrega(agregado);
                 rentaPojo.setIdDatosPago(datosFacade.getDatosPago(idCar));
                 rentaPojo.setIdUsuario(usuarioFacade.buscarPorcorreo2(session.getAttribute("email").toString()));
-                rentaPojo.setTotal_renta(carritoProductoFacade.getCarrito((int) session.getAttribute("idCarrito")).getTotal());
-                rentasFacade.create(rentaPojo);
+                rentaPojo.setTotal_renta(0);
+                int idRenta = rentasFacade.create(rentaPojo);
+                for (int i = 0; i < lista_rentas.size(); i++) {
+                    DetalleRenta detalleR = new DetalleRenta();
+                    detalleR.setCantidad(lista_rentas.get(i).getCantidad());
+                    detalleR.setIdDetalleRenta(idRenta);
+                    detalleR.setIdProducto(lista_rentas.get(i).getIdProducto());
+                    detalleR.setIdRenta(rentasFacade.getRenta(idRenta));
+                    detalleR.setSubtotal(lista_rentas.get(i).getSubtotal());
+                    detalleRentasFacade = new DetalleRentaFacade();
+                    Rentas r = rentasFacade.getRenta(idRenta);
+                    r.setTotalRenta(r.getTotalRenta()+detalleR.getSubtotal());
+                    rentasFacade.edit(r);
+                    detalleRentasFacade.create(detalleR);
+                }
             }
             if (!lista_compras.isEmpty()) {
                 System.out.println("Compras vacio");
@@ -142,13 +163,45 @@ public class DatosPagoBean {
                 compraPojo.setFecha_entrega(agregado);
                 compraPojo.setIdDatosPago(datosFacade.getDatosPago(idCar));
                 compraPojo.setIdUsuario(usuarioFacade.buscarPorcorreo2(session.getAttribute("email").toString()));
-                compraPojo.setTotal_compra(carritoProductoFacade.getCarrito((int) session.getAttribute("idCarrito")).getTotal());
-                comprasFacade.create(compraPojo);
+                compraPojo.setTotal_compra(0);
+                
+                int idCompra = comprasFacade.create(compraPojo);
+                for (int i = 0; i < lista_compras.size(); i++) {
+                    DetalleCompra detalleC = new DetalleCompra();
+                    detalleC.setCantidad(lista_compras.get(i).getCantidad());
+                    detalleC.setIdDetalleCompra(idCompra);
+                    detalleC.setIdProducto(lista_compras.get(i).getIdProducto());
+                    detalleC.setIdCompra(comprasFacade.getCompra(idCompra));
+                    detalleC.setSubtotal(lista_compras.get(i).getSubtotal());
+                    detalleComprasFacade = new DetalleCompraFacade();
+                    Compras c = comprasFacade.getCompra(idCompra);
+                    c.setTotalCompra(c.getTotalCompra()+detalleC.getSubtotal());
+                    comprasFacade.edit(c);
+                    detalleComprasFacade.create(detalleC);
+                }
             }
+            vaciar();
             return "Historial-Usuario";
         } else {
             System.out.println("la contraseña no coincide");
             return "carrito";
+        }
+    }
+    
+    public void vaciar() throws Exception {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        System.out.println(session.getId());
+        //LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
+        if (session.getAttribute("idCarrito").equals(0)) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No tienes nada en el carrito", "Advertencia"));
+        } else {
+            carFacade = new CarritosFacade();
+            carritoProductoFacade = new CarritoProductoFacade();
+            carritoProductoFacade.remove(carritoProductoFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString())));
+            carFacade.remove(Integer.parseInt(session.getAttribute("idCarrito").toString()));
+            session.setAttribute("idCarrito", 0);
         }
     }
 

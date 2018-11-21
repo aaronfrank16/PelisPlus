@@ -83,8 +83,9 @@ public class ComprasJpaController implements Serializable {
     public void edit(Compras compras) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Compras persistentCompras = em.find(Compras.class, compras.getIdCompra());
             Usuarios idUsuarioOld = persistentCompras.getIdUsuario();
             Usuarios idUsuarioNew = compras.getIdUsuario();
@@ -243,6 +244,22 @@ public class ComprasJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public List<Compras> getComprasbyUser(Usuarios id) {
+        List<Compras> compras = null;
+        EntityManager em = getEntityManager();
+        System.out.println("Buscado compras por User "+id);
+        Query consulta = em.createNamedQuery("Compras.findByidUsuario");
+        consulta.setParameter("idUsuario", id);
+        compras = consulta.getResultList();
+        em.close();
+        if (!compras.isEmpty()) {
+            System.out.println("Compras encontradas");
+        }else{
+            System.out.println("No la encontre");
+        }
+        return compras;
     }
     
 }

@@ -128,7 +128,11 @@ public class CarritoCompraBean {
                 car_product.setIdCarrito(carProductFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString())));
                 car_product.setIdProducto(carProductFacade.getProducto(idProduct));
                 if (tipo == 1) {
-                    car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                    if (tipo_compra == 1) {
+                        car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                    }else{
+                        car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioRenta());
+                    }
                 } else {
                     car_product.setSubtotal(carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
                 }

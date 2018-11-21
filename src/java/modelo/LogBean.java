@@ -1,5 +1,7 @@
 package modelo;
 
+import controlador.CarritoProductoFacade;
+import controlador.CarritosFacade;
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
 import java.io.IOException;
@@ -27,6 +29,8 @@ public class LogBean {
     private ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 
     private UsuariosFacade usuarioFacade;
+    private CarritosFacade carFacade;
+    private CarritoProductoFacade carritoProductoFacade;
 
     public LogBean() {
 
@@ -139,11 +143,29 @@ public class LogBean {
 
     }
 
-    public String logOutUser() {
+    public String logOutUser() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Tu no estas Logeado.", null));
+        vaciar();
         context.getExternalContext().invalidateSession();
         return "Login.xhtml?faces-redirect=true";
+    }
+    
+    public void vaciar() throws Exception {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        System.out.println(session.getId());
+        //LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
+        if (session.getAttribute("idCarrito").equals(0)) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No tienes nada en el carrito", "Advertencia"));
+        } else {
+            carFacade = new CarritosFacade();
+            carritoProductoFacade = new CarritoProductoFacade();
+            carritoProductoFacade.remove(carritoProductoFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString())));
+            carFacade.remove(Integer.parseInt(session.getAttribute("idCarrito").toString()));
+            session.setAttribute("idCarrito", 0);
+        }
     }
 
     public boolean IsOnline() {

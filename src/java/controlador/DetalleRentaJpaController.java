@@ -18,6 +18,7 @@ import entidad.Productos;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.transaction.UserTransaction;
 
 /**
@@ -26,11 +27,10 @@ import javax.transaction.UserTransaction;
  */
 public class DetalleRentaJpaController implements Serializable {
 
-    public DetalleRentaJpaController(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
+    public DetalleRentaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    private UserTransaction utx = null;
+    private EntityTransaction utx = null;
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -40,8 +40,9 @@ public class DetalleRentaJpaController implements Serializable {
     public void create(DetalleRenta detalleRenta) throws RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Rentas idRenta = detalleRenta.getIdRenta();
             if (idRenta != null) {
                 idRenta = em.getReference(idRenta.getClass(), idRenta.getIdRenta());

@@ -12,10 +12,14 @@ import javax.persistence.PersistenceContext;
 public class DetalleRentaFacade{
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlockbusterPU");
-    private CarritosJpaController carritoJpa = new CarritosJpaController(emf);
+    private DetalleRentaJpaController detalleRJpa = new DetalleRentaJpaController(emf);
 
     public DetalleRentaFacade() {
         
+    }
+
+    public void create(DetalleRenta detalleR) throws Exception {
+        detalleRJpa.create(detalleR);
     }
     
 }
