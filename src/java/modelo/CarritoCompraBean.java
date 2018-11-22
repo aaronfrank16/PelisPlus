@@ -15,8 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Named(value = "carritoCompraBean")
 @RequestScoped
@@ -31,6 +33,9 @@ public class CarritoCompraBean {
     private ProductosFacade productFacade;
     private PeliculasFacade peliculaFacade = new PeliculasFacade();
     private SeriesFacade serieFacade = new SeriesFacade();
+
+    private HttpSession session;
+    private ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 
     public CarritoCompraBean() {
 
@@ -60,29 +65,35 @@ public class CarritoCompraBean {
         this.total = total;
     }
 
-    public String crearCompra(String correo, int tipo, int tipo_compra) throws Exception {
-        if (!correo.equals("")) {
+    public String crearCompra(int tipo, int tipo_compra) throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        System.out.println(session.getAttribute("email")+" MI CORREOsjdhfdskd");
+        System.out.println(session.getId());
+        if (session.getAttribute("email") != null) {
+//if (!correo.equals("")) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
-            if (neededBean.getIdCarrito() == 0) {
+            //LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
+            if (session.getAttribute("idCarrito").equals(0)) {
+//if (neededBean.getIdCarrito() == 0) {
                 Calendar fecha = Calendar.getInstance();
                 Date now = fecha.getTime();
                 fecha.add(Calendar.DAY_OF_YEAR, 30);
                 Date agregado = fecha.getTime();
-                FacesContext context = FacesContext.getCurrentInstance();
                 CarritoPojo carrito = new CarritoPojo();
                 carrito.setIdCarrito(idCarrito);
                 carrito.setIdUsuario(idUsuario);
                 carrito.setTotal(0);
 
                 carritoFacade = new CarritosFacade();
-                CarritoPojo car = carritoFacade.crearCarrito(carrito, correo);
+                CarritoPojo car = carritoFacade.crearCarrito(carrito, session.getAttribute("email").toString());
                 setIdCarrito(car.getIdCarrito());
                 setIdUsuario(car.getIdUsuario());
                 setTotal(car.getTotal());
-                neededBean.setIdCarrito(car.getIdCarrito());
+                session.setAttribute("idCarrito", car.getIdCarrito());
+                //neededBean.setIdCarrito(car.getIdCarrito());
             } else {
-                setIdCarrito(neededBean.getIdCarrito());
+                setIdCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString()));
             }
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             String txtProperty = request.getParameter("myForm:movie");
@@ -114,10 +125,14 @@ public class CarritoCompraBean {
                 CarritoProductoPojo car_product = new CarritoProductoPojo();
                 car_product.setIdCarritoProducto(idCarrito);
                 car_product.setCantidad(1);
-                car_product.setIdCarrito(carProductFacade.getCarrito(idCarrito));
+                car_product.setIdCarrito(carProductFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString())));
                 car_product.setIdProducto(carProductFacade.getProducto(idProduct));
                 if (tipo == 1) {
-                    car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                    if (tipo_compra == 1) {
+                        car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
+                    }else{
+                        car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioRenta());
+                    }
                 } else {
                     car_product.setSubtotal(carProductFacade.getSerie(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
                 }

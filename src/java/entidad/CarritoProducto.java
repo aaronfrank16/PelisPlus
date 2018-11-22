@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package entidad;
 
 import java.io.Serializable;
@@ -16,6 +20,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ *
+ * @author aaron
+ */
 @Entity
 @Table(name = "carrito_producto")
 @XmlRootElement
@@ -40,12 +48,6 @@ public class CarritoProducto implements Serializable {
     private double subtotal;
     @Column(name = "cantidad")
     private Integer cantidad;
-    @JoinColumn(name = "idCarrito", referencedColumnName = "idCarrito")
-    @ManyToOne(optional = false)
-    private Carritos idCarrito;
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
-    @ManyToOne(optional = false)
-    private Productos idProducto;
     @Basic(optional = false)
     @NotNull
     @Column(name = "tipo_producto")
@@ -54,6 +56,12 @@ public class CarritoProducto implements Serializable {
     @NotNull
     @Column(name = "tipo_compra")
     private int tipoCompra;
+    @JoinColumn(name = "idCarrito", referencedColumnName = "idCarrito")
+    @ManyToOne(optional = false)
+    private Carritos idCarrito;
+    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
+    @ManyToOne(optional = false)
+    private Productos idProducto;
 
     public CarritoProducto() {
     }
@@ -124,8 +132,6 @@ public class CarritoProducto implements Serializable {
     public void setIdProducto(Productos idProducto) {
         this.idProducto = idProducto;
     }
-    
-    
 
     @Override
     public int hashCode() {

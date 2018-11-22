@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Series.findByNumeroTemporadas", query = "SELECT s FROM Series s WHERE s.numeroTemporadas = :numeroTemporadas")
     , @NamedQuery(name = "Series.findByPrecioCompra", query = "SELECT s FROM Series s WHERE s.precioCompra = :precioCompra")
     , @NamedQuery(name = "Series.findByEstudio", query = "SELECT s FROM Series s WHERE s.estudio = :estudio")
+    , @NamedQuery(name = "Series.findByCantidadAlmacen", query = "SELECT s FROM Series s WHERE s.cantidadAlmacen = :cantidadAlmacen")
     , @NamedQuery(name = "Series.findByIdProducto", query = "SELECT s FROM Series s WHERE s.idProducto = :idProducto")})
 public class Series implements Serializable {
 
@@ -56,13 +57,13 @@ public class Series implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "estudio")
     private String estudio;
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
-    @ManyToOne(optional = false)
-    private Productos idProducto;
     @Basic(optional = false)
     @NotNull
     @Column(name = "cantidad_almacen")
     private int cantidadAlmacen;
+    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
+    @ManyToOne(optional = false)
+    private Productos idProducto;
 
     public Series() {
     }
@@ -71,11 +72,12 @@ public class Series implements Serializable {
         this.idSerie = idSerie;
     }
 
-    public Series(Integer idSerie, int numeroTemporadas, double precioCompra, String estudio) {
+    public Series(Integer idSerie, int numeroTemporadas, double precioCompra, String estudio, int cantidadAlmacen) {
         this.idSerie = idSerie;
         this.numeroTemporadas = numeroTemporadas;
         this.precioCompra = precioCompra;
         this.estudio = estudio;
+        this.cantidadAlmacen = cantidadAlmacen;
     }
 
     public Integer getIdSerie() {
@@ -110,6 +112,14 @@ public class Series implements Serializable {
         this.estudio = estudio;
     }
 
+    public int getCantidadAlmacen() {
+        return cantidadAlmacen;
+    }
+
+    public void setCantidadAlmacen(int cantidadAlmacen) {
+        this.cantidadAlmacen = cantidadAlmacen;
+    }
+
     public Productos getIdProducto() {
         return idProducto;
     }
@@ -118,14 +128,6 @@ public class Series implements Serializable {
         this.idProducto = idProducto;
     }
 
-    public int getCantidadAlmacen() {
-        return cantidadAlmacen;
-    }
-
-    public void setCantidadAlmacen(int cantidadAlmacen) {
-        this.cantidadAlmacen = cantidadAlmacen;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;

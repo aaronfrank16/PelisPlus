@@ -46,4 +46,8 @@ public class CarritosFacade{
         carritoJpa.destroy(idCompraP);
     }
     
+    public void getCarrito(int id){
+        
+    }
+    
 }

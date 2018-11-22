@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 @Named(value = "listaCarritoBean")
 @RequestScoped
@@ -21,16 +23,23 @@ public class ListaCarritoBean {
 
     private CarritoProductoFacade carritoPFacade;
     private ProductosFacade productFacade;
+    
+    private HttpSession session;
+    private ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 
     public ListaCarritoBean() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
+        //LoginBean neededBean = (LoginBean) facesContext.getApplication().createValueBinding("#{loginBean}").getValue(facesContext);
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        System.out.println(session.getAttribute("email")+" MI CORREOsjdhfdskd");
+        System.out.println(session.getId());
         carritoPFacade = new CarritoProductoFacade();
-        this.lista_compras = (carritoPFacade.filtrar(carritoPFacade.getCarrito(neededBean.getIdCarrito())));
-        this.lista_rentas = (carritoPFacade.filtrarR(carritoPFacade.getCarrito(neededBean.getIdCarrito())));
+        this.lista_compras = (carritoPFacade.filtrar(carritoPFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString()))));
+        this.lista_rentas = (carritoPFacade.filtrarR(carritoPFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString()))));
         double aux = 0;
         try {
-            aux = carritoPFacade.getCarrito(neededBean.getIdCarrito()).getTotal();
+            aux = carritoPFacade.getCarrito(Integer.parseInt(session.getAttribute("idCarrito").toString())).getTotal();
         } catch (Exception e) {
             aux = 0;
         }

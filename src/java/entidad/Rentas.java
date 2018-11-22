@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Rentas.findByFechaRenta", query = "SELECT r FROM Rentas r WHERE r.fechaRenta = :fechaRenta")
     , @NamedQuery(name = "Rentas.findByFechaDevolucion", query = "SELECT r FROM Rentas r WHERE r.fechaDevolucion = :fechaDevolucion")
     , @NamedQuery(name = "Rentas.findByFechaEntrega", query = "SELECT r FROM Rentas r WHERE r.fechaEntrega = :fechaEntrega")
-    , @NamedQuery(name = "Rentas.findByTotalRenta", query = "SELECT r FROM Rentas r WHERE r.totalRenta = :totalRenta")})
+    , @NamedQuery(name = "Rentas.findByTotalRenta", query = "SELECT r FROM Rentas r WHERE r.totalRenta = :totalRenta")
+    ,@NamedQuery(name = "Rentas.findByidUsuario", query = "SELECT r FROM Rentas r WHERE r.idUsuario = :idUsuario")})
 public class Rentas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,8 +68,10 @@ public class Rentas implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "total_renta")
-    @Temporal(TemporalType.DATE)
-    private Date totalRenta;
+    private double totalRenta;
+    @JoinColumn(name = "idDatosPago", referencedColumnName = "idDatosPago")
+    @ManyToOne(optional = false)
+    private DatosPago idDatosPago;
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
     @ManyToOne(optional = false)
     private Usuarios idUsuario;
@@ -82,7 +85,7 @@ public class Rentas implements Serializable {
         this.idRenta = idRenta;
     }
 
-    public Rentas(Integer idRenta, Date fechaRenta, Date fechaDevolucion, Date fechaEntrega, Date totalRenta) {
+    public Rentas(Integer idRenta, Date fechaRenta, Date fechaDevolucion, Date fechaEntrega, double totalRenta) {
         this.idRenta = idRenta;
         this.fechaRenta = fechaRenta;
         this.fechaDevolucion = fechaDevolucion;
@@ -122,12 +125,20 @@ public class Rentas implements Serializable {
         this.fechaEntrega = fechaEntrega;
     }
 
-    public Date getTotalRenta() {
+    public double getTotalRenta() {
         return totalRenta;
     }
 
-    public void setTotalRenta(Date totalRenta) {
+    public void setTotalRenta(double totalRenta) {
         this.totalRenta = totalRenta;
+    }
+
+    public DatosPago getIdDatosPago() {
+        return idDatosPago;
+    }
+
+    public void setIdDatosPago(DatosPago idDatosPago) {
+        this.idDatosPago = idDatosPago;
     }
 
     public Usuarios getIdUsuario() {
@@ -171,5 +182,5 @@ public class Rentas implements Serializable {
     public String toString() {
         return "entidad.Rentas[ idRenta=" + idRenta + " ]";
     }
-    
+
 }

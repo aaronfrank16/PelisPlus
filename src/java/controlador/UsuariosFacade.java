@@ -60,6 +60,15 @@ public class UsuariosFacade {
         user.setRol(usuario.getRol());
         return user;
     }
+    
+    public Usuarios buscarPorcorreo2(String Correo) {
+        UsuarioPojo user = new UsuarioPojo();
+        Usuarios usuario = userJpa.findByCorreo(Correo);
+        user.setContraseña(usuario.getContraseña());
+        user.setCorreo(usuario.getCorreo());
+        user.setRol(usuario.getRol());
+        return usuario;
+    }
 
     public boolean buscarUsuario(String correo, String contraseña) {
         Usuarios userPojo;
@@ -73,7 +82,7 @@ public class UsuariosFacade {
         if (userPojo != null) {
             valido = validarUsuario(userPojo, contraseña);
             if (valido) {
-                System.out.println("Es valido");
+                System.out.println("Es valido ********************************");
                 return true;
             } else {
                 System.out.println("No es valido");

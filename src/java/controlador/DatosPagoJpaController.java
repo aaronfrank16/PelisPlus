@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controlador;
 
 import controlador.exceptions.IllegalOrphanException;
@@ -13,14 +17,19 @@ import entidad.Rentas;
 import java.util.ArrayList;
 import java.util.List;
 import entidad.Compras;
-import entidad.Usuarios;
+import entidad.DatosPago;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.transaction.UserTransaction;
 
-public class UsuariosJpaController implements Serializable {
+/**
+ *
+ * @author aaron
+ */
+public class DatosPagoJpaController implements Serializable {
 
-    public UsuariosJpaController(EntityManagerFactory emf) {
+    public DatosPagoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityTransaction utx = null;
@@ -30,12 +39,12 @@ public class UsuariosJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuarios usuarios) throws RollbackFailureException, Exception {
-        if (usuarios.getRentasList() == null) {
-            usuarios.setRentasList(new ArrayList<Rentas>());
+    public void create(DatosPago datosPago) throws RollbackFailureException, Exception {
+        if (datosPago.getRentasList() == null) {
+            datosPago.setRentasList(new ArrayList<Rentas>());
         }
-        if (usuarios.getComprasList() == null) {
-            usuarios.setComprasList(new ArrayList<Compras>());
+        if (datosPago.getComprasList() == null) {
+            datosPago.setComprasList(new ArrayList<Compras>());
         }
         EntityManager em = null;
         try {
@@ -43,34 +52,34 @@ public class UsuariosJpaController implements Serializable {
             utx = em.getTransaction();
             utx.begin();
             List<Rentas> attachedRentasList = new ArrayList<Rentas>();
-            for (Rentas rentasListRentasToAttach : usuarios.getRentasList()) {
+            for (Rentas rentasListRentasToAttach : datosPago.getRentasList()) {
                 rentasListRentasToAttach = em.getReference(rentasListRentasToAttach.getClass(), rentasListRentasToAttach.getIdRenta());
                 attachedRentasList.add(rentasListRentasToAttach);
             }
-            usuarios.setRentasList(attachedRentasList);
+            datosPago.setRentasList(attachedRentasList);
             List<Compras> attachedComprasList = new ArrayList<Compras>();
-            for (Compras comprasListComprasToAttach : usuarios.getComprasList()) {
+            for (Compras comprasListComprasToAttach : datosPago.getComprasList()) {
                 comprasListComprasToAttach = em.getReference(comprasListComprasToAttach.getClass(), comprasListComprasToAttach.getIdCompra());
                 attachedComprasList.add(comprasListComprasToAttach);
             }
-            usuarios.setComprasList(attachedComprasList);
-            em.persist(usuarios);
-            for (Rentas rentasListRentas : usuarios.getRentasList()) {
-                Usuarios oldIdUsuarioOfRentasListRentas = rentasListRentas.getIdUsuario();
-                rentasListRentas.setIdUsuario(usuarios);
+            datosPago.setComprasList(attachedComprasList);
+            em.persist(datosPago);
+            for (Rentas rentasListRentas : datosPago.getRentasList()) {
+                DatosPago oldIdDatosPagoOfRentasListRentas = rentasListRentas.getIdDatosPago();
+                rentasListRentas.setIdDatosPago(datosPago);
                 rentasListRentas = em.merge(rentasListRentas);
-                if (oldIdUsuarioOfRentasListRentas != null) {
-                    oldIdUsuarioOfRentasListRentas.getRentasList().remove(rentasListRentas);
-                    oldIdUsuarioOfRentasListRentas = em.merge(oldIdUsuarioOfRentasListRentas);
+                if (oldIdDatosPagoOfRentasListRentas != null) {
+                    oldIdDatosPagoOfRentasListRentas.getRentasList().remove(rentasListRentas);
+                    oldIdDatosPagoOfRentasListRentas = em.merge(oldIdDatosPagoOfRentasListRentas);
                 }
             }
-            for (Compras comprasListCompras : usuarios.getComprasList()) {
-                Usuarios oldIdUsuarioOfComprasListCompras = comprasListCompras.getIdUsuario();
-                comprasListCompras.setIdUsuario(usuarios);
+            for (Compras comprasListCompras : datosPago.getComprasList()) {
+                DatosPago oldIdDatosPagoOfComprasListCompras = comprasListCompras.getIdDatosPago();
+                comprasListCompras.setIdDatosPago(datosPago);
                 comprasListCompras = em.merge(comprasListCompras);
-                if (oldIdUsuarioOfComprasListCompras != null) {
-                    oldIdUsuarioOfComprasListCompras.getComprasList().remove(comprasListCompras);
-                    oldIdUsuarioOfComprasListCompras = em.merge(oldIdUsuarioOfComprasListCompras);
+                if (oldIdDatosPagoOfComprasListCompras != null) {
+                    oldIdDatosPagoOfComprasListCompras.getComprasList().remove(comprasListCompras);
+                    oldIdDatosPagoOfComprasListCompras = em.merge(oldIdDatosPagoOfComprasListCompras);
                 }
             }
             utx.commit();
@@ -88,23 +97,23 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuarios usuarios) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(DatosPago datosPago) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Usuarios persistentUsuarios = em.find(Usuarios.class, usuarios.getIdUsuario());
-            List<Rentas> rentasListOld = persistentUsuarios.getRentasList();
-            List<Rentas> rentasListNew = usuarios.getRentasList();
-            List<Compras> comprasListOld = persistentUsuarios.getComprasList();
-            List<Compras> comprasListNew = usuarios.getComprasList();
+            DatosPago persistentDatosPago = em.find(DatosPago.class, datosPago.getIdDatosPago());
+            List<Rentas> rentasListOld = persistentDatosPago.getRentasList();
+            List<Rentas> rentasListNew = datosPago.getRentasList();
+            List<Compras> comprasListOld = persistentDatosPago.getComprasList();
+            List<Compras> comprasListNew = datosPago.getComprasList();
             List<String> illegalOrphanMessages = null;
             for (Rentas rentasListOldRentas : rentasListOld) {
                 if (!rentasListNew.contains(rentasListOldRentas)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Rentas " + rentasListOldRentas + " since its idUsuario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Rentas " + rentasListOldRentas + " since its idDatosPago field is not nullable.");
                 }
             }
             for (Compras comprasListOldCompras : comprasListOld) {
@@ -112,7 +121,7 @@ public class UsuariosJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Compras " + comprasListOldCompras + " since its idUsuario field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Compras " + comprasListOldCompras + " since its idDatosPago field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -124,34 +133,34 @@ public class UsuariosJpaController implements Serializable {
                 attachedRentasListNew.add(rentasListNewRentasToAttach);
             }
             rentasListNew = attachedRentasListNew;
-            usuarios.setRentasList(rentasListNew);
+            datosPago.setRentasList(rentasListNew);
             List<Compras> attachedComprasListNew = new ArrayList<Compras>();
             for (Compras comprasListNewComprasToAttach : comprasListNew) {
                 comprasListNewComprasToAttach = em.getReference(comprasListNewComprasToAttach.getClass(), comprasListNewComprasToAttach.getIdCompra());
                 attachedComprasListNew.add(comprasListNewComprasToAttach);
             }
             comprasListNew = attachedComprasListNew;
-            usuarios.setComprasList(comprasListNew);
-            usuarios = em.merge(usuarios);
+            datosPago.setComprasList(comprasListNew);
+            datosPago = em.merge(datosPago);
             for (Rentas rentasListNewRentas : rentasListNew) {
                 if (!rentasListOld.contains(rentasListNewRentas)) {
-                    Usuarios oldIdUsuarioOfRentasListNewRentas = rentasListNewRentas.getIdUsuario();
-                    rentasListNewRentas.setIdUsuario(usuarios);
+                    DatosPago oldIdDatosPagoOfRentasListNewRentas = rentasListNewRentas.getIdDatosPago();
+                    rentasListNewRentas.setIdDatosPago(datosPago);
                     rentasListNewRentas = em.merge(rentasListNewRentas);
-                    if (oldIdUsuarioOfRentasListNewRentas != null && !oldIdUsuarioOfRentasListNewRentas.equals(usuarios)) {
-                        oldIdUsuarioOfRentasListNewRentas.getRentasList().remove(rentasListNewRentas);
-                        oldIdUsuarioOfRentasListNewRentas = em.merge(oldIdUsuarioOfRentasListNewRentas);
+                    if (oldIdDatosPagoOfRentasListNewRentas != null && !oldIdDatosPagoOfRentasListNewRentas.equals(datosPago)) {
+                        oldIdDatosPagoOfRentasListNewRentas.getRentasList().remove(rentasListNewRentas);
+                        oldIdDatosPagoOfRentasListNewRentas = em.merge(oldIdDatosPagoOfRentasListNewRentas);
                     }
                 }
             }
             for (Compras comprasListNewCompras : comprasListNew) {
                 if (!comprasListOld.contains(comprasListNewCompras)) {
-                    Usuarios oldIdUsuarioOfComprasListNewCompras = comprasListNewCompras.getIdUsuario();
-                    comprasListNewCompras.setIdUsuario(usuarios);
+                    DatosPago oldIdDatosPagoOfComprasListNewCompras = comprasListNewCompras.getIdDatosPago();
+                    comprasListNewCompras.setIdDatosPago(datosPago);
                     comprasListNewCompras = em.merge(comprasListNewCompras);
-                    if (oldIdUsuarioOfComprasListNewCompras != null && !oldIdUsuarioOfComprasListNewCompras.equals(usuarios)) {
-                        oldIdUsuarioOfComprasListNewCompras.getComprasList().remove(comprasListNewCompras);
-                        oldIdUsuarioOfComprasListNewCompras = em.merge(oldIdUsuarioOfComprasListNewCompras);
+                    if (oldIdDatosPagoOfComprasListNewCompras != null && !oldIdDatosPagoOfComprasListNewCompras.equals(datosPago)) {
+                        oldIdDatosPagoOfComprasListNewCompras.getComprasList().remove(comprasListNewCompras);
+                        oldIdDatosPagoOfComprasListNewCompras = em.merge(oldIdDatosPagoOfComprasListNewCompras);
                     }
                 }
             }
@@ -164,9 +173,9 @@ public class UsuariosJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = usuarios.getIdUsuario();
-                if (findUsuarios(id) == null) {
-                    throw new NonexistentEntityException("The usuarios with id " + id + " no longer exists.");
+                Integer id = datosPago.getIdDatosPago();
+                if (findDatosPago(id) == null) {
+                    throw new NonexistentEntityException("The datosPago with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -182,32 +191,32 @@ public class UsuariosJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Usuarios usuarios;
+            DatosPago datosPago;
             try {
-                usuarios = em.getReference(Usuarios.class, id);
-                usuarios.getIdUsuario();
+                datosPago = em.getReference(DatosPago.class, id);
+                datosPago.getIdDatosPago();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The usuarios with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The datosPago with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Rentas> rentasListOrphanCheck = usuarios.getRentasList();
+            List<Rentas> rentasListOrphanCheck = datosPago.getRentasList();
             for (Rentas rentasListOrphanCheckRentas : rentasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Usuarios (" + usuarios + ") cannot be destroyed since the Rentas " + rentasListOrphanCheckRentas + " in its rentasList field has a non-nullable idUsuario field.");
+                illegalOrphanMessages.add("This DatosPago (" + datosPago + ") cannot be destroyed since the Rentas " + rentasListOrphanCheckRentas + " in its rentasList field has a non-nullable idDatosPago field.");
             }
-            List<Compras> comprasListOrphanCheck = usuarios.getComprasList();
+            List<Compras> comprasListOrphanCheck = datosPago.getComprasList();
             for (Compras comprasListOrphanCheckCompras : comprasListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Usuarios (" + usuarios + ") cannot be destroyed since the Compras " + comprasListOrphanCheckCompras + " in its comprasList field has a non-nullable idUsuario field.");
+                illegalOrphanMessages.add("This DatosPago (" + datosPago + ") cannot be destroyed since the Compras " + comprasListOrphanCheckCompras + " in its comprasList field has a non-nullable idDatosPago field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            em.remove(usuarios);
+            em.remove(datosPago);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -223,19 +232,19 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public List<Usuarios> findUsuariosEntities() {
-        return findUsuariosEntities(true, -1, -1);
+    public List<DatosPago> findDatosPagoEntities() {
+        return findDatosPagoEntities(true, -1, -1);
     }
 
-    public List<Usuarios> findUsuariosEntities(int maxResults, int firstResult) {
-        return findUsuariosEntities(false, maxResults, firstResult);
+    public List<DatosPago> findDatosPagoEntities(int maxResults, int firstResult) {
+        return findDatosPagoEntities(false, maxResults, firstResult);
     }
 
-    private List<Usuarios> findUsuariosEntities(boolean all, int maxResults, int firstResult) {
+    private List<DatosPago> findDatosPagoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Usuarios.class));
+            cq.select(cq.from(DatosPago.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -247,42 +256,26 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public Usuarios findUsuarios(Integer id) {
+    public DatosPago findDatosPago(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Usuarios.class, id);
+            return em.find(DatosPago.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getUsuariosCount() {
+    public int getDatosPagoCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Usuarios> rt = cq.from(Usuarios.class);
+            Root<DatosPago> rt = cq.from(DatosPago.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
         }
-    }
-    
-    public Usuarios findByCorreo(String login){
-        Usuarios user = null;
-        List<Usuarios> users;
-        EntityManager em = getEntityManager();
-        System.out.println("Buscando usuario por email en el jpacontroller");
-        Query consulta = em.createNamedQuery("Usuarios.findByCorreo");
-        consulta.setParameter("correo", login);
-        users=consulta.getResultList();
-        if (!users.isEmpty()) {
-            System.out.println("Lo encontro");
-            System.out.println("users.get[0]: "+users.get(0));
-            user = users.get(0);
-        }
-        return user;
     }
     
 }
