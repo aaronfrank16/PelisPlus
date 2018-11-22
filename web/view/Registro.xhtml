@@ -30,28 +30,28 @@ and open the template in the editor.
                                             <div class="input-field col s4">                                            
                                                 <p:outputLabel for="txtNombre" value="Nombre"/>
                                                 <p:inputText id="txtNombre" value="#{registroBean.nombre}" required="true" requiredMessage="Campo Requerido" validatorMessage="Solo se permiten letras">
-                                                    <f:validateRegex pattern="[a-zA-Z]"/>
+                                                    <f:validateRegex pattern="[a-zA-Z]+$"/>
                                                 </p:inputText>
                                                 <p:message for="txtNombre"/>
                                             </div>
                                             <div class="input-field col s4">
                                                 <p:outputLabel for="txtApP" value="Apellido Paterno"/>
                                                 <p:inputText id="txtApP" value="#{registroBean.apellidoP}" required="true" requiredMessage="Campo Requerido" validatorMessage="Solo se permiten letras">
-                                                    <f:validateRegex pattern="[a-zA-Z]+"/>
+                                                    <f:validateRegex pattern="^[a-zA-Z]+$"/>
                                                 </p:inputText>
                                                 <p:message for="txtApP"/>
                                             </div>
                                             <div class="input-field col s4">
                                                 <p:outputLabel for="txtApM" value="ApellidoMaterno"/>
                                                 <p:inputText id="txtApM" value="#{registroBean.apellidoM}" required="true" requiredMessage="Campo Requerido" validatorMessage="Solo se permiten letras">
-                                                    <f:validateRegex pattern="[a-zA-Z]+"/>
+                                                    <f:validateRegex pattern="[a-zA-Z]+$"/>
                                                 </p:inputText>
                                                 <p:message for="txtApM"/>
                                             </div>
                                             <div class="input-field col s6">
                                                 <p:outputLabel for="txtMun" value="Municipio"/>
                                                 <p:inputText id="txtMun" value="#{registroBean.municipio}" required="true" requiredMessage="Campo Requerido" validatorMessage="Solo se permiten letras">
-                                                    <f:validateRegex pattern="[A-Za-z0-9\s]+$"/>
+                                                    <f:validateRegex pattern="^[A-Za-z0-9\s]+$"/>
                                                 </p:inputText>
                                                 <p:message for="txtMun"/>
                                             </div>
@@ -107,7 +107,7 @@ and open the template in the editor.
                                                 <p:outputLabel for="txtCP" value="Codigo Postal"/>
                                                 <p:inputText id="txtCP" value="#{registroBean.cp}" required="true" requiredMessage="Campo Requerido" validatorMessage="El CP debe de incluir 5 numeros">
                                                  <f:validateLength minimum="5" maximum="5"/>
-                                                 <f:validateRegex pattern="^[0-9]+"/>
+                                                 <f:validateRegex pattern="^[0-9]+$"/>
                                                 </p:inputText>
                                                 <p:message for="txtCP"/>
                                             </div>
@@ -131,7 +131,7 @@ and open the template in the editor.
                                             <div class="input-field col s6">
                                                 <p:outputLabel for="txtCol" value="Colonia"/>
                                                 <p:inputText id="txtCol" value="#{registroBean.colonia}" required="true" requiredMessage="Campo Requerido" validatorMessage="Numero invalido">
-                                                 <f:validateRegex pattern="^[A-Za-z\s]+"/>
+                                                 <f:validateRegex pattern="^[A-Za-z\s]+$"/>
                                                 </p:inputText>  
                                                 <p:message for="txtCol"/>
                                             </div>
