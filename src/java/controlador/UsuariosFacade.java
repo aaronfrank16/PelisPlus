@@ -2,6 +2,7 @@ package controlador;
 
 import controlador.exceptions.RollbackFailureException;
 import entidad.Usuarios;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -15,6 +16,7 @@ public class UsuariosFacade {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlockbusterPU");
     private UserTransaction utx;
     private UsuariosJpaController userJpa = new UsuariosJpaController(emf);
+   
 
     public void crearUsuario(UsuarioPojo usuario) {
         try {
@@ -43,13 +45,22 @@ public class UsuariosFacade {
     }
 
     public void editarUsuario(Usuarios usuario) {
-        try {
-            userJpa.edit(usuario);
+        try {  
+             System.out.println(usuario.getCorreo());
+            System.out.println(usuario.getCalle());
+            System.out.println(usuario.getMunicipio());
+            System.out.println(usuario.getIdUsuario());
+            System.out.println(usuario.getApellidoP());
+             System.out.println(usuario.getApellidoM());
+            System.out.println(usuario.getCalle());
+            
+           userJpa.editar(usuario);
+           
         } catch (RollbackFailureException ex) {
             Logger.getLogger(UsuariosFacade.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(UsuariosFacade.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
     }
 
     public UsuarioPojo buscarPorcorreo(String Correo) {

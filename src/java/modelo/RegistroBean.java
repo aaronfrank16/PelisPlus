@@ -1,12 +1,16 @@
 package modelo;
 
+import static com.sun.faces.facelets.util.Path.context;
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
+import entidad.Usuarios;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import javax.servlet.http.HttpSession;
 
 @Named(value = "registroBean")
 @RequestScoped
@@ -28,10 +32,11 @@ public class RegistroBean {
     private int no_ext;
     private String rol;
     private String confirmar;
-
+    private HttpSession session;
     private UsuariosFacade usuarioFacade;
     private FacesContext fc = FacesContext.getCurrentInstance();
     private ExternalContext ec = fc.getExternalContext();
+    private UsuariosFacade usuariooFacade = new UsuariosFacade();
 
     public RegistroBean() {
 
@@ -221,5 +226,29 @@ public class RegistroBean {
                 System.out.println("No voy");
             }
         }
+    }
+       public void editar() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        Usuarios usuario = usuariooFacade.buscarPorcorreo2(session.getAttribute("email").toString());
+        usuario.setCalle(calle);
+        usuario.setCelular(celular);
+        usuario.setColonia(colonia);
+        usuario.setContraseña(contraseña);
+        usuario.setCp(cp);
+        usuario.setNoExt(no_ext);
+        usuario.setNoInt(no_int);
+        usuario.setTelefonoFijo(telefono_fijo);
+        usuariooFacade.editarUsuario(usuario); 
+        System.out.println("aqui esta modificandoxD");
+        context.addMessage("", new FacesMessage("Se edito correctamente"));
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Advertencia"));
+        try {
+            FacesContext contex = FacesContext.getCurrentInstance();
+            contex.getExternalContext().redirect("/Videoclub/faces/view/Home.xhtml");
+        } catch (Exception e) {
+            System.out.println("Me voy al carajo, no funciona esta redireccion");
+        }
+
     }
 }

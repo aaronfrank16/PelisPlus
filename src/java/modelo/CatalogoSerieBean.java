@@ -25,12 +25,23 @@ public class CatalogoSerieBean {
     private List<Productos> categoria1;
     private List<Productos> categoria2;
     private List<Productos> categoria3;
+    private List<Productos> seriesbuscar;
+
+    public List<Productos> getSeriesbuscar() {
+        return seriesbuscar;
+    }
+
+    public void setSeriesbuscar(List<Productos> seriesbuscar) {
+        this.seriesbuscar = seriesbuscar;
+    }
     
     public CatalogoSerieBean() {
         productoFacade = new ProductosFacade();
         setCategoria1(productoFacade.listaCategoriaSerie1());
         setCategoria2(productoFacade.listaCategoriaSerie5());
         setCategoria3(productoFacade.listaCategoriaSerie2());
+       
+        
     }
 
     public int getIdProducto() {
