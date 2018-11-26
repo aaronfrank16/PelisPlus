@@ -87,12 +87,41 @@ public class UsuariosJpaController implements Serializable {
             }
         }
     }
+      public void editar(Usuarios usuario) throws NonexistentEntityException, RollbackFailureException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
+            usuario = em.merge(usuario);
+            utx.commit();
+        } catch (Exception ex) {
+            try {
+                utx.rollback();
+            } catch (Exception re) {
+                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
+            }
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                Integer id = usuario.getIdUsuario();
+                if (findUsuarios(id) == null) {
+                    throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
+                }
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
 
     public void edit(Usuarios usuarios) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            utx.begin();
             em = getEntityManager();
+            utx = em.getTransaction();
+            utx.begin();
             Usuarios persistentUsuarios = em.find(Usuarios.class, usuarios.getIdUsuario());
             List<Rentas> rentasListOld = persistentUsuarios.getRentasList();
             List<Rentas> rentasListNew = usuarios.getRentasList();

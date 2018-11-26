@@ -13,11 +13,11 @@
             <ui:define name="content">
                 <h:body>
                     <div class="container">
-                        <h:form>
+                        <h:form>                
                             <p:outputLabel value="Drama" style="font-size: 28px; color: black"/>
                             <div style="border: transparent">
                                 <p:dataTable var="comp" value="#{catalogoSerieBean.categoria1}" style="border: 0px;">
-                                    <p:column style="text-align: center">
+                                    <p:column style="text-align: center" filterBy="#{comp.titulo}" filterStyle="widith:150px;" filterMatchMode="contains">
                                         <p:panelGrid columns="1">
                                             <h:outputText value="#{comp.titulo}" style="font-size: 14pt;" />
                                             <h:graphicImage library="img" name="serie#{comp.idProducto}.jpg" style="width: 120px;"/>
@@ -53,6 +53,7 @@
                                     </p:column>
                                 </p:dataTable>
                             </div>
+
                         </h:form>
                     </div>
                 </h:body>
