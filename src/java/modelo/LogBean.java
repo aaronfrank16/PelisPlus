@@ -83,7 +83,7 @@ public class LogBean {
                     //if (request.isUserInRole("comprador")) {
                     try {
                         FacesContext contex = FacesContext.getCurrentInstance();
-                        contex.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
+                        contex.getExternalContext().redirect("/Blockbuster/faces/view/Home.xhtml");
                     } catch (IOException ex) {
                         System.out.println("NO funcina");
                     }
