@@ -36,7 +36,6 @@ public class RegistroBean {
     private UsuariosFacade usuarioFacade;
     private FacesContext fc = FacesContext.getCurrentInstance();
     private ExternalContext ec = fc.getExternalContext();
-    private UsuariosFacade usuariooFacade = new UsuariosFacade();
 
     public RegistroBean() {
 
@@ -215,37 +214,64 @@ public class RegistroBean {
             user.setNombre(nombre);
             user.setTelefono_fijo(telefono_fijo);
             user.setRol("comprador");
-            usuarioFacade.crearUsuario(user);
-            System.out.println("yeahhhhhhhhhhhhhhhhhhhhhh");
-            context.addMessage("", new FacesMessage("Se registro correctamente"));
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Información"));
-            try {
-                FacesContext contex = FacesContext.getCurrentInstance();
-                contex.getExternalContext().redirect("/PelisPlus/faces/view/Login.xhtml");
-            } catch (Exception e) {
-                System.out.println("No voy");
+            if (usuarioFacade.crearUsuario(user)) {
+                System.out.println("yeahhhhhhhhhhhhhhhhhhhhhh");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Información"));
+                try {
+                    FacesContext contex = FacesContext.getCurrentInstance();
+                    contex.getExternalContext().redirect("/Blockbuster/faces/view/Login.xhtml");
+                } catch (Exception e) {
+                    System.out.println("No voy");
+                }
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Ya existe un usuario con ese correo", "Información"));
             }
         }
     }
-       public void editar() {
+
+    public String buscaUser() {
         FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) context.getExternalContext().getSession(false);
-        Usuarios usuario = usuariooFacade.buscarPorcorreo2(session.getAttribute("email").toString());
+        usuarioFacade = new UsuariosFacade();
+        Usuarios usuario = usuarioFacade.buscarPorcorreo2(session.getAttribute("email").toString());
+        this.apellidoM = usuario.getApellidoM();
+        this.apellidoP = usuario.getApellidoP();
+        this.calle = usuario.getCalle();
+        this.celular = usuario.getCelular();
+        this.colonia = usuario.getColonia();
+        this.contraseña = usuario.getContraseña();
+        this.correo = usuario.getCorreo();
+        this.cp = usuario.getCp();
+        this.idUsuario = usuario.getIdUsuario();
+        this.municipio = usuario.getMunicipio();
+        this.no_ext = usuario.getNoExt();
+        this.no_int = usuario.getNoInt();
+        this.nombre = usuario.getNombre();
+        this.rol = usuario.getRol();
+        this.telefono_fijo = usuario.getTelefonoFijo();
+        return "EditarUsuario";
+    }
+
+    public void editar() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        usuarioFacade = new UsuariosFacade();
+        Usuarios usuario = usuarioFacade.buscarPorcorreo2(session.getAttribute("email").toString());
         usuario.setCalle(calle);
         usuario.setCelular(celular);
         usuario.setColonia(colonia);
-        usuario.setContraseña(contraseña);
         usuario.setCp(cp);
         usuario.setNoExt(no_ext);
         usuario.setNoInt(no_int);
         usuario.setTelefonoFijo(telefono_fijo);
-        usuariooFacade.editarUsuario(usuario); 
+        usuario.setMunicipio(municipio);
+        usuarioFacade.editarUsuario(usuario);
         System.out.println("aqui esta modificandoxD");
         context.addMessage("", new FacesMessage("Se edito correctamente"));
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Advertencia"));
         try {
             FacesContext contex = FacesContext.getCurrentInstance();
-            contex.getExternalContext().redirect("/Videoclub/faces/view/Home.xhtml");
+            contex.getExternalContext().redirect("/Blockbuster/faces/view/Home.xhtml");
         } catch (Exception e) {
             System.out.println("Me voy al carajo, no funciona esta redireccion");
         }

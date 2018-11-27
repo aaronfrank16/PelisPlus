@@ -1,9 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controlador;
 
 import controlador.exceptions.IllegalOrphanException;
 import controlador.exceptions.NonexistentEntityException;
 import controlador.exceptions.RollbackFailureException;
-import entidad.Carritos;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -13,22 +17,23 @@ import entidad.Rentas;
 import java.util.ArrayList;
 import java.util.List;
 import entidad.Compras;
+import entidad.Carritos;
 import entidad.Usuarios;
-import static java.lang.Math.log;
-import java.util.Set;
-import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import javax.transaction.UserTransaction;
 
-public class UsuariosJpaController implements Serializable {
+/**
+ *
+ * @author aaron
+ */
+public class UsuariosJpaController1 implements Serializable {
 
-    public UsuariosJpaController(EntityManagerFactory emf) {
+    public UsuariosJpaController1(UserTransaction utx, EntityManagerFactory emf) {
+        this.utx = utx;
         this.emf = emf;
     }
-    private EntityTransaction utx = null;
+    private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -42,11 +47,13 @@ public class UsuariosJpaController implements Serializable {
         if (usuarios.getComprasList() == null) {
             usuarios.setComprasList(new ArrayList<Compras>());
         }
+        if (usuarios.getCarritosList() == null) {
+            usuarios.setCarritosList(new ArrayList<Carritos>());
+        }
         EntityManager em = null;
         try {
-            em = getEntityManager();
-            utx = em.getTransaction();
             utx.begin();
+            em = getEntityManager();
             List<Rentas> attachedRentasList = new ArrayList<Rentas>();
             for (Rentas rentasListRentasToAttach : usuarios.getRentasList()) {
                 rentasListRentasToAttach = em.getReference(rentasListRentasToAttach.getClass(), rentasListRentasToAttach.getIdRenta());
@@ -59,6 +66,12 @@ public class UsuariosJpaController implements Serializable {
                 attachedComprasList.add(comprasListComprasToAttach);
             }
             usuarios.setComprasList(attachedComprasList);
+            List<Carritos> attachedCarritosList = new ArrayList<Carritos>();
+            for (Carritos carritosListCarritosToAttach : usuarios.getCarritosList()) {
+                carritosListCarritosToAttach = em.getReference(carritosListCarritosToAttach.getClass(), carritosListCarritosToAttach.getIdCarrito());
+                attachedCarritosList.add(carritosListCarritosToAttach);
+            }
+            usuarios.setCarritosList(attachedCarritosList);
             em.persist(usuarios);
             for (Rentas rentasListRentas : usuarios.getRentasList()) {
                 Usuarios oldIdUsuarioOfRentasListRentas = rentasListRentas.getIdUsuario();
@@ -78,41 +91,21 @@ public class UsuariosJpaController implements Serializable {
                     oldIdUsuarioOfComprasListCompras = em.merge(oldIdUsuarioOfComprasListCompras);
                 }
             }
-            utx.commit();
-        } catch (Exception ex) {
-            try {
-                utx.rollback();
-            } catch (Exception re) {
-                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
-            }
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    public void editar(Usuarios usuario) throws NonexistentEntityException, RollbackFailureException, Exception {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            utx = em.getTransaction();
-            utx.begin();
-            usuario = em.merge(usuario);
-            utx.commit();
-        } catch (Exception ex) {
-            try {
-                utx.rollback();
-            } catch (Exception re) {
-                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
-            }
-            String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                Integer id = usuario.getIdUsuario();
-                if (findUsuarios(id) == null) {
-                    throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
+            for (Carritos carritosListCarritos : usuarios.getCarritosList()) {
+                Usuarios oldIdUsuarioOfCarritosListCarritos = carritosListCarritos.getIdUsuario();
+                carritosListCarritos.setIdUsuario(usuarios);
+                carritosListCarritos = em.merge(carritosListCarritos);
+                if (oldIdUsuarioOfCarritosListCarritos != null) {
+                    oldIdUsuarioOfCarritosListCarritos.getCarritosList().remove(carritosListCarritos);
+                    oldIdUsuarioOfCarritosListCarritos = em.merge(oldIdUsuarioOfCarritosListCarritos);
                 }
+            }
+            utx.commit();
+        } catch (Exception ex) {
+            try {
+                utx.rollback();
+            } catch (Exception re) {
+                throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
             throw ex;
         } finally {
@@ -125,9 +118,8 @@ public class UsuariosJpaController implements Serializable {
     public void edit(Usuarios usuarios) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
-            utx = em.getTransaction();
             utx.begin();
+            em = getEntityManager();
             Usuarios persistentUsuarios = em.find(Usuarios.class, usuarios.getIdUsuario());
             List<Rentas> rentasListOld = persistentUsuarios.getRentasList();
             List<Rentas> rentasListNew = usuarios.getRentasList();
@@ -267,6 +259,13 @@ public class UsuariosJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Usuarios (" + usuarios + ") cannot be destroyed since the Compras " + comprasListOrphanCheckCompras + " in its comprasList field has a non-nullable idUsuario field.");
             }
+            List<Carritos> carritosListOrphanCheck = usuarios.getCarritosList();
+            for (Carritos carritosListOrphanCheckCarritos : carritosListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Usuarios (" + usuarios + ") cannot be destroyed since the Carritos " + carritosListOrphanCheckCarritos + " in its carritosList field has a non-nullable idUsuario field.");
+            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
@@ -331,21 +330,5 @@ public class UsuariosJpaController implements Serializable {
             em.close();
         }
     }
-
-    public Usuarios findByCorreo(String login) {
-        Usuarios user = null;
-        List<Usuarios> users;
-        EntityManager em = getEntityManager();
-        System.out.println("Buscando usuario por email en el jpacontroller");
-        Query consulta = em.createNamedQuery("Usuarios.findByCorreo");
-        consulta.setParameter("correo", login);
-        users = consulta.getResultList();
-        if (!users.isEmpty()) {
-            System.out.println("Lo encontro");
-            System.out.println("users.get[0]: " + users.get(0));
-            user = users.get(0);
-        }
-        return user;
-    }
-
+    
 }

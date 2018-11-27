@@ -20,6 +20,9 @@ and open the template in the editor.
     <ui:composition template="/Template/master.xhtml">
         <ui:define name="content">
             <h:body styleClass="cyan lighten-5">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{logBean.validaPagina()}" />
+                </f:metadata>
                 <h:form class="col s12">
                     <br/>
                     <div class="row">
