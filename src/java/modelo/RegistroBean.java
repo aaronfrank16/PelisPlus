@@ -27,7 +27,7 @@ public class RegistroBean {
     private String municipio;
     private String cp;
     private String celular;
-    private String telefono_fijo;
+    private String telefono_fijo="00000";
     private int no_int;
     private int no_ext;
     private String rol;

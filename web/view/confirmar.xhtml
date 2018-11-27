@@ -82,8 +82,10 @@
                                 <h:outputText value="CVV"/>
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{datosPagoBean.tarjeta}"  requiredMessage="Campo requerido">
-                                    <!--<f:validateLength minimum="16" maximum="16"/>-->
+                                <p:inputText value="#{datosPagoBean.tarjeta}"  validatorMessage="La tarjeta incluye entre 16 a 18 numeros">
+                                    <f:validateLength minimum="16" maximum="16"/>
+                                    <f:validateRegex pattern="^[0-9]+$"/>
+                                    <p:clientValidator/>
                                 </p:inputText>
                                 <br/>
                                 <p:inputText type="password" value="#{datosPagoBean.contraseña}" requiredMessage="Campo requerido">
@@ -95,7 +97,9 @@
                                 </p:inputText>
                                 <br/>
                                 <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="Campo requerido">
-                                    <!--<f:validateLength minimum="3" maximum="4"/>-->
+                                   <f:validateLength minimum="3" maximum="4"/>
+                                   <f:validateRegex pattern="^[0-9]+$"/>
+                                   <p:clientValidator/>
                                 </p:inputText>
                                 <br/>
                             </p:column>
