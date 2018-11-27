@@ -18,7 +18,8 @@ import org.primefaces.context.RequestContext;
 
 @Named(value = "loginBean")
 @SessionScoped
-public class LoginBean implements Serializable {
+public class LoginBean implements Serializable
+{
 
     private String correo;
     private String contraseña;
@@ -32,31 +33,38 @@ public class LoginBean implements Serializable {
     private UsuariosFacade usuarioFacade;
     private UsuarioPojo usuario = new UsuarioPojo();
 
-    public LoginBean() {
+    public LoginBean()
+    {
 
     }
 
-    public String getCorreo() {
+    public String getCorreo()
+    {
         return correo;
     }
 
-    public void setCorreo(String correo) {
+    public void setCorreo(String correo)
+    {
         this.correo = correo;
     }
 
-    public String getContraseña() {
+    public String getContraseña()
+    {
         return contraseña;
     }
 
-    public void setContraseña(String contraseña) {
+    public void setContraseña(String contraseña)
+    {
         this.contraseña = contraseña;
     }
 
-    public int getIdCarrito() {
+    public int getIdCarrito()
+    {
         return idCarrito;
     }
 
-    public void setIdCarrito(int idCarrito) {
+    public void setIdCarrito(int idCarrito)
+    {
         this.idCarrito = idCarrito;
     }
 
@@ -65,7 +73,7 @@ public class LoginBean implements Serializable {
         UsuarioPojo user = new UsuarioPojo();
         user.setCorreo(correo);
         user.setContraseña(contraseña);
-        
+
         usuario = usuarioFacade.buscarPorcorreo(correo);
         if (usuario != null)
         {
@@ -73,28 +81,31 @@ public class LoginBean implements Serializable {
             this.correo = usuario.getCorreo();
             this.contraseña = usuario.getContraseña();
         }
-        
-        cambioSesion();
-        validado = true;
-        session = (HttpSession) ec.getSession(false);
-        session.setAttribute("validado", validado);
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        RequestContext context = RequestContext.getCurrentInstance();
-        System.out.println("VOY A ENTRAR AL IF");
-        if (request.isUserInRole("comprador"))
+        if (usuarioFacade.buscarUsuario(correo, contraseña))
         {
-            try
+            cambioSesion();
+            validado = true;
+            session = (HttpSession) ec.getSession(false);
+            session.setAttribute("validado", validado);
+            HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+            RequestContext context = RequestContext.getCurrentInstance();
+            System.out.println("VOY A ENTRAR AL IF");
+            if (request.isUserInRole("comprador"))
             {
-                ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
-                System.out.println("HOLA ESTOY EN EL IF");
-            } catch (IOException ex)
+                try
+                {
+                    ec.redirect(ec.getRequestContextPath() + "/PelisPlus/faces/view/Home.xhtml");
+                    System.out.println("HOLA ESTOY EN EL IF");
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else
             {
-                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("VALIO VERGA EL IF");
             }
-        }else{
-            System.out.println("VALIO VERGA EL IF");
         }
-        
+
         //Desde aqui si funcionaba
 //        FacesContext context = FacesContext.getCurrentInstance();
 //        usuarioFacade = new UsuariosFacade();
@@ -156,10 +167,10 @@ public class LoginBean implements Serializable {
 //                    System.out.println("No voy");
 //                    System.out.println("HOLA: "+session.getId());
 //                }
-        }
-    
+    }
 
-    public void cambioSesion() {
+    public void cambioSesion()
+    {
         FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) ec.getSession(false);
 
@@ -180,26 +191,32 @@ public class LoginBean implements Serializable {
 //        System.out.println("Id sesion " + session.getId());
     }
 
-    public void validaSesion() {
+    public void validaSesion()
+    {
 
     }
 
-    public String logOutUser() {
+    public String logOutUser()
+    {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Tu no estas Logeado.", null));
         context.getExternalContext().invalidateSession();
         return "Login.xhtml?faces-redirect=true";
     }
 
-    public boolean IsOnline(String email) {
-        if (email.isEmpty()) {
+    public boolean IsOnline(String email)
+    {
+        if (email.isEmpty())
+        {
             return false;
         }
         return true;
     }
 
-    public boolean IsOffline(String email) {
-        if (email.isEmpty()) {
+    public boolean IsOffline(String email)
+    {
+        if (email.isEmpty())
+        {
             return true;
         }
         return false;
