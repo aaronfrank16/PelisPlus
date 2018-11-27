@@ -9,6 +9,9 @@
         <title>Carrito de Compras</title>
     </h:head>
     <h:body>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{logBean.validaPagina()}" />
+        </f:metadata>
         <ui:composition template="/Template/master.xhtml">
 
             <ui:define name="content">
@@ -25,11 +28,11 @@
                                     <p:column headerText="Nombre">
                                         <h:outputText value="#{comp.idProducto.titulo}" />
                                     </p:column>
-                                    
+
                                     <p:column headerText="Tipo">
                                         <h:outputText value="#{listaCarritoBean.getTipo(comp.tipoProducto)}" />
                                     </p:column>
-                                        
+
                                     <p:column headerText="Precio">
                                         <h:outputText value="#{comp.subtotal}" />
                                     </p:column>
@@ -45,7 +48,7 @@
                                     <p:column headerText="Nombre">
                                         <h:outputText value="#{comp.idProducto.titulo}" />
                                     </p:column>
-                                    
+
                                     <p:column headerText="Precio">
                                         <h:outputText value="#{comp.subtotal}" />
                                     </p:column>
@@ -63,7 +66,7 @@
                             <h:outputText value="Total a Pagar: " style="font-size: 12pt;"/>
                             <h:outputText value="$#{listaCarritoBean.total_pago}" style="font-size: 13pt;"/>
                         </p:panel>
-                                               
+
                     </h:panelGroup>
                     <br/>
                     <h:form>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Editar Usuario</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name="materialize.min.css"/>
+        <h:outputScript library="js" name="materialize.min.js"/>
+    </h:head>
+    <ui:composition template="/Template/master.xhtml">
+        <ui:define name="content">
+            <h:body styleClass="cyan lighten-5">
+                <div class="row">
+                    <h:form class="col s12" title="Actualizar Datos">
+                        <p:fieldset legend="Registro">
+                            <p:panel id="panelED" header="Datos de Envio" style="margin-bottom:10px;">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <p:outputLabel for="txtCalle" value="Calle"/>
+                                                <p:inputText id="txtCalle" value="#{registroBean.calle}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="txtCalle"/>
+                                            </div>
+                                             <div class="input-field col s6">
+                                                <p:outputLabel for="txtMunicipio" value="Municipio"/>
+                                                <p:inputText id="txtMunicipio" value="#{registroBean.municipio}" required="true" requiredMessage="Campo Requerido" />
+                                                <p:message for="txtMunicipio"/>
+                                            </div>
+                                            <div class="input-field col s4">
+                                                <p:outputLabel for="txtNI" value="Numero Interior"/>
+                                                <p:inputText id="txtNI" value="#{registroBean.no_int}" required="true" requiredMessage="Campo Requerido"/>
+                                                <p:message for="txtNI"/>
+                                            </div>
+                                            <div class="input-field col s4">
+                                                <p:outputLabel for="txtNE" value="Numero Exterior"/>
+                                                <p:inputText id="txtNE" value="#{registroBean.no_ext}" required="true" requiredMessage="Campo Requerido"/>
+                                                <p:message for="txtNE"/>
+                                            </div>
+                                            <div class="input-field col s4">
+                                                <p:outputLabel for="txtCP" value="Codigo Postal"/>
+                                                <p:inputText id="txtCP" value="#{registroBean.cp}" required="true" requiredMessage="Campo Requerido"/>
+                                                <p:message for="txtCP"/>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <p:outputLabel for="celular" value="Celular"/>
+                                                <p:inputText id="celular" value="#{registroBean.celular}" required="true" requiredMessage="Campo Requerido"/>
+                                                <p:message for="celular"/>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <p:outputLabel for="txtTF" value="Telefono Fijo"/>
+                                                <p:inputText id="txtTF" value="#{registroBean.telefono_fijo}" required="true" requiredMessage="Campo Requerido"/>  
+                                                <p:message for="txtTF"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p:panel>
+                            <p:commandLink value="Actualizar" action="#{registroBean.editar()}" class="btn btn-large" update="panelED"/>
+                        </p:fieldset>
+                    </h:form>
+                </div>
+                <h:outputScript library="js" name="materialize.min.js"/>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

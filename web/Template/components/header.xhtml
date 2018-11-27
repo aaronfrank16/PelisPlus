@@ -18,7 +18,9 @@
                     <p:menuitem value="Series" icon="ui-icon-image" style="font-size: 19pt;margin-top: 25px;" url="../view/Catalogo_Series.xhtml"/>
                     <f:facet name="options">
                         <h:panelGrid columns="2" style="text-decoration: none">
+
                             <p:inputText style="margin-right:50px" placeholder="Buscar"/>
+
                             <c:choose>
                                 <c:when test="#{logBean.IsOffline()}">
                                     <h:commandLink value="Iniciar Sesión" styleClass="btn btn-large" action="Login.xhtml" style="margin-right: 15px;border-radius: 5px;font-size: 13pt;color: white;background-color: #0091ea;"/>                        
@@ -27,11 +29,11 @@
                                     <p:menuButton value="Usuario: #{logBean.correoSesion}" style="margin-right: 15px" iconPos="ui-icon-person">
                                         <p:menuitem id="carrito" value="Carrito" action="carrito.xhtml" icon="ui-icon-cart"/>
                                         <p:menuitem id="HistU" value="Historial" action="Historial-Usuario.xhtml" icon="ui-icon-pencil"/>  
-                                        <p:menuitem id="DatU" value="Modificar Datos" action="EditarUsuario.xhtml" icon="ui-icon-person"/>
+                                        <p:menuitem id="DatU" value="Modificar Datos" action="#{registroBean.buscaUser()}" icon="ui-icon-person"/>
                                         <p:menuitem value="Logout" action="#{logBean.logOutUser()}" icon="ui-icon-power"/>
                                     </p:menuButton>                           
                                 </c:when>
-                                
+
                             </c:choose>
                         </h:panelGrid>
                     </f:facet>

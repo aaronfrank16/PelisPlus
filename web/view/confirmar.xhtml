@@ -17,6 +17,9 @@
     <ui:composition template="/Template/master.xhtml">
         <ui:define name="content">
             <h:body styleClass="cyan lighten-5">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{logBean.validaPagina()}" />
+                </f:metadata>
                 <h:form class="col s12">
                     <br/>
                     <div class="row">
@@ -83,11 +86,12 @@
                                     <!--<f:validateLength minimum="16" maximum="16"/>-->
                                 </p:inputText>
                                 <br/>
-                                <p:inputText value="#{datosPagoBean.contraseña}" requiredMessage="Campo requerido">
+                                <p:inputText type="password" value="#{datosPagoBean.contraseña}" requiredMessage="Campo requerido">
                                 </p:inputText>
                                 <br/>
                                 <!--<p:calendar value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido"pattern="yyyy-MM-dd" />-->
                                 <p:inputText value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido">
+                                    <f:convertDateTime pattern="yyyy-MM-dd"/>  
                                 </p:inputText>
                                 <br/>
                                 <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="Campo requerido">

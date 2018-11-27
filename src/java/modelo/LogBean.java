@@ -198,5 +198,23 @@ public class LogBean {
         session = (HttpSession) ec.getSession(false);
         return session.getAttribute("email").toString();
     }
+    
+    public void validaPagina() throws IOException {
+        HttpSession session = (HttpSession) ec.getSession(false);
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            if (!(boolean) session.getAttribute("validado")) {
+                ec.redirect(ec.getRequestContextPath() + "/faces/view/Login.xhtml");
+            } else {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente", "Informacion"));
+//            this.rol = (HttpSession) session.getAttribute("rol");
+//            this.ap = (HttpSession) session.getAttribute("ap");
+//            this.ap = (HttpSession) session.getAttribute("ap");
+//            this.email = (HttpSession) session.getAttribute("email");
+            }
+        }catch(NullPointerException e){
+            ec.redirect(ec.getRequestContextPath() + "/faces/view/Login.xhtml");
+        }
+    }
 
 }

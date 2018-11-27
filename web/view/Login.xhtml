@@ -26,7 +26,8 @@ and open the template in the editor.
                                 <div class="col s6 offset-l3">
                                     <div class="card">
                                         <div class="card-content">
-                                            <img class="responsive-img" style="max-width:200px;" src="https://cdn6.aptoide.com/imgs/8/e/b/8ebf5f481d7817f2b957d8e578a54c89_icon.png?w=240"/>
+                                            
+                                             <p:graphicImage library="img" name="movielogin.png" style="width: 180px;"/>
                                             <div class="center-align">
                                                 <h:form id="login-form">
                                                     <p:growl autoUpdate="true"/>
@@ -43,18 +44,21 @@ and open the template in the editor.
 
                                                         </div>
                                                         <div class="col s12 input-field">
-                                                            <p:captcha />
+                                                            <center>
+                                                                <p:captcha required="true" />
+                                                            </center>
                                                         </div>
-                                                        <div class="col s12 input-field">
-
-                                                            <div class="col s6 input-field">
-                                                                <p:commandLink value="Ingresar" class="btn btn-large" action="#{logBean.submit()}"/>
-                                                            </div>
-                                                            <div class="col s6 input-field">
-                                                                <p:commandLink value="Registrarse" class="btn btn-large" action="Registro.xhtml" />
+                                                        <div>   
+                                                            <div>
+                                                                <p:commandLink value="Ingresar" class="btn btn-large" action="#{logBean.submit()}" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #0091ea;width: 200px;margin-bottom: 10px;"/>
                                                             </div>
                                                         </div> 
                                                     </div> 
+                                                </h:form>
+                                                <h:form>
+                                                    <div>
+                                                        <p:commandLink value="Registrarse" class="btn btn-large" action="Registro.xhtml" style="border-radius: 5px;font-size: 13pt;color: white;background-color: #00C853;width: 200px;"/>
+                                                    </div>
                                                 </h:form>
                                             </div>
                                         </div>
