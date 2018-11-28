@@ -50,6 +50,8 @@ public class DatosPagoBean {
 
     private CarritosFacade carFacade;
     private CarritoProductoFacade carritoProductoFacade;
+    
+    private UsuariosFacade usuarioDes;
 
     public DatosPagoBean() {
 
@@ -100,7 +102,8 @@ public class DatosPagoBean {
         session = (HttpSession) context.getExternalContext().getSession(false);
         UsuariosFacade usuarioFacade = new UsuariosFacade();
         System.out.println("Entre en confirmation------------------------");
-        if (contraseña.equals(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña())) {
+        String contraDes = usuarioDes.Desencriptar(contraseña);
+        if (contraDes.equals(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña())) {
             System.out.println("Entre a esta madre");
             DatosPagoPojo datosPojo = new DatosPagoPojo();
             datosFacade = new DatosPagoFacade();
@@ -183,6 +186,7 @@ public class DatosPagoBean {
             vaciar();
             return "Historial-Usuario";
         } else {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pass incorrecta", "Error"));
             System.out.println("la contraseña no coincide");
             return "carrito";
         }
