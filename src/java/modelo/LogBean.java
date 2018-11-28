@@ -5,13 +5,8 @@ import controlador.CarritosFacade;
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -19,7 +14,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.codec.binary.Base64;
 
 @Named(value = "logBean")
 @RequestScoped
