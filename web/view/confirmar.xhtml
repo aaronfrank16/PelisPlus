@@ -92,8 +92,8 @@
                                 </p:inputText>
                                 <br/>
                                 <!--<p:calendar value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido"pattern="yyyy-MM-dd" />-->
-                                <p:inputText value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido">
-                                    <f:convertDateTime pattern="yyyy-MM-dd"/>  
+                                <p:inputText value="#{datosPagoBean.fecha_expiracion}" validatorMessage="LA fecha no es valida">
+                                    <f:convertDateTime pattern="yyyy/MM/dd"/>  
                                 </p:inputText>
                                 <br/>
                                 <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="Campo requerido">
