@@ -39,7 +39,7 @@
                                         <h:outputText value="#{comp.idProducto.titulo}"/>
                                     </p:column>
                                     <p:column headerText="Precio">
-                                        <h:outputText value="#{listaCarritoBean.getPrecioCompra(comp.idProducto)}"/>
+                                        <h:outputText value="$#{listaCarritoBean.getPrecioCompra(comp.idProducto)}"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:panelGrid>
@@ -60,13 +60,13 @@
                                 <h:outputText value="#{comp.idProducto.titulo}"/>
                             </p:column>
                             <p:column headerText="Total Pagado">
-                                <h:outputText value="#{listaCarritoBean.getPrecioRent(comp.idProducto)}"/>
+                                <h:outputText value="$#{listaCarritoBean.getPrecioRent(comp.idProducto)}"/>
                             </p:column>
                         </p:dataTable>
                     </p:fieldset>
                     <br/>
                     <p:fieldset legend="Total de Pago">
-                        <h:outputText value="#{listaCarritoBean.total_pago}"/>
+                        <h:outputText value="$#{listaCarritoBean.total_pago}"/>
                     </p:fieldset>
                 </h:form>
 

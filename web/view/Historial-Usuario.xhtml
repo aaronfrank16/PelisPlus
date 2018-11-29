@@ -36,7 +36,7 @@ and open the template in the editor.
                                         <h:outputText value="#{comp.idDatosPago.tarjeta}"/>
                                     </p:column>
                                     <p:column headerText="Total">
-                                        <h:outputText value="#{comp.totalCompra}"/>
+                                        <h:outputText value="$#{comp.totalCompra}"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:panelGrid>
@@ -55,7 +55,7 @@ and open the template in the editor.
                                 <h:outputText value="#{rent.idDatosPago.tarjeta}"/>
                             </p:column>
                             <p:column headerText="Total">
-                                <h:outputText value="#{rent.totalRenta}"/>
+                                <h:outputText value="$#{rent.totalRenta}"/>
                             </p:column>
                         </p:dataTable>
                     </p:fieldset>
