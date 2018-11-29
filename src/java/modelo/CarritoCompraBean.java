@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -65,10 +66,10 @@ public class CarritoCompraBean {
         this.total = total;
     }
 
-    public String crearCompra(int tipo, int tipo_compra) throws Exception {
+    public void crearCompra(int tipo, int tipo_compra) throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) context.getExternalContext().getSession(false);
-        System.out.println(session.getAttribute("email")+" MI CORREOsjdhfdskd");
+        System.out.println(session.getAttribute("email") + " MI CORREOsjdhfdskd");
         System.out.println(session.getId());
         if (session.getAttribute("email") != null) {
 //if (!correo.equals("")) {
@@ -99,12 +100,16 @@ public class CarritoCompraBean {
             String txtProperty = request.getParameter("myForm:movie");
             int idProduct = Integer.parseInt(txtProperty);
             agregarCarrito(idProduct, tipo, tipo_compra);//1.-Pelicula 2.-Serie || 1.-Compra 2.-Renta
-            return "carrito";
+            FacesContext contex = FacesContext.getCurrentInstance();
+            context.getExternalContext().getFlash().setKeepMessages(true);
+            contex.getExternalContext().redirect(ec.getRequestContextPath() + "/faces/view/carrito.xhtml");
+        } else {
+            FacesContext contex = FacesContext.getCurrentInstance();
+            contex.getExternalContext().redirect(ec.getRequestContextPath() + "/faces/view/Login.xhtml");
         }
-        return "Login";
     }
 
-    public void agregarCarrito(int idProduct, int tipo, int tipo_compra) {
+    public boolean agregarCarrito(int idProduct, int tipo, int tipo_compra) {
         try {
             System.out.println("El producto que se agregara al carrito----- " + idProduct);
             productFacade = new ProductosFacade();
@@ -121,6 +126,8 @@ public class CarritoCompraBean {
             }
             if (cantAC == 0) {
                 System.out.println("No hay productos en existencia");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No tenemos ese producto en existencia", "Información"));
+                return false;
             } else {
                 CarritoProductoPojo car_product = new CarritoProductoPojo();
                 car_product.setIdCarritoProducto(idCarrito);
@@ -130,7 +137,7 @@ public class CarritoCompraBean {
                 if (tipo == 1) {
                     if (tipo_compra == 1) {
                         car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioCompra());
-                    }else{
+                    } else {
                         car_product.setSubtotal(carProductFacade.getPelicula(carProductFacade.getProducto(idProduct).getIdProducto()).getPrecioRenta());
                     }
                 } else {
@@ -163,5 +170,6 @@ public class CarritoCompraBean {
         } catch (Exception ex) {
             System.out.println(ex);
         }
+        return true;
     }
 }

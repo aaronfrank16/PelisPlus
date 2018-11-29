@@ -101,9 +101,13 @@ public class DatosPagoBean {
         FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) context.getExternalContext().getSession(false);
         UsuariosFacade usuarioFacade = new UsuariosFacade();
+        UsuariosFacade usuarioDes = new UsuariosFacade();
         System.out.println("Entre en confirmation------------------------");
+        System.out.println("ES AQUI DONDE NO COMPARA BIEN LAS CONTRASEÑAS");
         String contraDes = usuarioDes.Desencriptar(contraseña);
-        if (contraDes.equals(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña())) {
+        System.out.println("Contraseña ingresada en el formulario "+contraDes);
+        System.out.println("Contraseña en la base de datos "+usuarioDes.Desencriptar(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña()));
+        if (contraDes.equals(usuarioDes.Desencriptar(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña()))) {
             System.out.println("Entre a esta madre");
             DatosPagoPojo datosPojo = new DatosPagoPojo();
             datosFacade = new DatosPagoFacade();
@@ -186,8 +190,8 @@ public class DatosPagoBean {
             vaciar();
             return "Historial-Usuario";
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pass incorrecta", "Error"));
             System.out.println("la contraseña no coincide");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "La contraseña no coincide", "Información"));
             return "carrito";
         }
     }

@@ -17,20 +17,16 @@ import javax.transaction.UserTransaction;
 import org.apache.commons.codec.binary.Base64;
 
 @Stateless
-public class UsuariosFacade
-{
+public class UsuariosFacade {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlockbusterPU");
     private UserTransaction utx;
     private UsuariosJpaController userJpa = new UsuariosJpaController(emf);
 
-    public boolean crearUsuario(UsuarioPojo usuario)
-    {
-        try
-        {
+    public boolean crearUsuario(UsuarioPojo usuario) {
+        try {
             Usuarios usuarioN = userJpa.findByCorreo(usuario.getCorreo());
-            if (usuarioN == null)
-            {
+            if (usuarioN == null) {
                 Usuarios user = new Usuarios();
                 user.setColonia(usuario.getColonia());
                 user.setMunicipio(usuario.getMunicipio());
@@ -49,22 +45,18 @@ public class UsuariosFacade
                 user.setRol(usuario.getRol());
                 userJpa.create(user);
                 return true;
-            } else
-            {
+            } else {
                 return false;
             }
-        } catch (RollbackFailureException ex)
-        {
+        } catch (RollbackFailureException ex) {
             Logger.getLogger(UsuariosFacade.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(UsuariosFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
 
-    public void editarUsuario(Usuarios usuario) throws Exception
-    {
+    public void editarUsuario(Usuarios usuario) throws Exception {
         System.out.println(usuario.getIdUsuario());
         System.out.println(usuario.getCorreo());
         System.out.println(usuario.getCalle());
@@ -77,18 +69,20 @@ public class UsuariosFacade
         userJpa.edit(usuario);
     }
 
-    public UsuarioPojo buscarPorcorreo(String Correo)
-    {
-        UsuarioPojo user = new UsuarioPojo();
-        Usuarios usuario = userJpa.findByCorreo(Correo);
-        user.setContraseña(usuario.getContraseña());
-        user.setCorreo(usuario.getCorreo());
-        user.setRol(usuario.getRol());
-        return user;
+    public UsuarioPojo buscarPorcorreo(String Correo) {
+        try {
+            UsuarioPojo user = new UsuarioPojo();
+            Usuarios usuario = userJpa.findByCorreo(Correo);
+            user.setContraseña(usuario.getContraseña());
+            user.setCorreo(usuario.getCorreo());
+            user.setRol(usuario.getRol());
+            return user;
+        }catch(NullPointerException e){
+            return null;
+        }
     }
 
-    public Usuarios buscarPorcorreo2(String Correo)
-    {
+    public Usuarios buscarPorcorreo2(String Correo) {
         UsuarioPojo user = new UsuarioPojo();
         Usuarios usuario = userJpa.findByCorreo(Correo);
         user.setContraseña(usuario.getContraseña());
@@ -97,8 +91,7 @@ public class UsuariosFacade
         return usuario;
     }
 
-    public boolean buscarUsuario(String correo, String contraseña)
-    {
+    public boolean buscarUsuario(String correo, String contraseña) {
         Usuarios userPojo;
         boolean valido = false;
 
@@ -108,16 +101,13 @@ public class UsuariosFacade
 
         System.out.println("Usuario hallado ");
 
-        if (userPojo != null)
-        {
+        if (userPojo != null) {
 
             valido = validarUsuario(userPojo, contraseña);
-            if (valido)
-            {
+            if (valido) {
                 System.out.println("Es valido ********************************");
                 return true;
-            } else
-            {
+            } else {
                 System.out.println("No es valido");
                 return false;
             }
@@ -125,8 +115,7 @@ public class UsuariosFacade
         return false;
     }
 
-    public boolean validarUsuario(Usuarios user, String pwd)
-    {
+    public boolean validarUsuario(Usuarios user, String pwd) {
         String actLogin;
         String actPwd;
         actPwd = user.getContraseña();
@@ -135,27 +124,22 @@ public class UsuariosFacade
         String contraDesen = Desencriptar(actPwd);
         System.out.println("***************** Pass desencriptada " + contraDesen);
 
-        if (contraDesen.equals(pwd))
-        {
+        if (contraDesen.equals(pwd)) {
             return true;
-        } else
-        {
+        } else {
             return false;
         }
     }
 
-    public UsuariosFacade()
-    {
+    public UsuariosFacade() {
 
     }
 
-    public String Desencriptar(String textoEncriptado)
-    {
+    public String Desencriptar(String textoEncriptado) {
         String secretKey = "qualityinfosolutions"; //llave para desenciptar datos
         String base64EncryptedString = "";
 
-        try
-        {
+        try {
             byte[] message = Base64.decodeBase64(textoEncriptado.getBytes("utf-8"));
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
@@ -168,9 +152,8 @@ public class UsuariosFacade
             byte[] plainText = decipher.doFinal(message);
 
             base64EncryptedString = new String(plainText, "UTF-8");
-        } catch (Exception ex)
-        {
- 
+        } catch (Exception ex) {
+
         }
         return base64EncryptedString;
     }

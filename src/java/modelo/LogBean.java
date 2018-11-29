@@ -84,7 +84,7 @@ public class LogBean
             {                
                 if (!usuarioFacade.buscarUsuario(correo, contraseña))
                 {
-                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Pass incorrecta", "Error"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "La contraseña no es correcta", "Información"));
                 } else
                 {
                     
@@ -100,21 +100,19 @@ public class LogBean
                     HttpServletRequest request = (HttpServletRequest) ec.getRequest();
                     if (session.getAttribute("rol").equals("comprador"))
                     {
-                        //if (request.isUserInRole("comprador")) {
                         try
                         {
                             FacesContext contex = FacesContext.getCurrentInstance();
-                            contex.getExternalContext().redirect("/PelisPlus/faces/view/Home.xhtml");
+                            contex.getExternalContext().redirect(ec.getRequestContextPath() +"/faces/view/Home.xhtml");
                         } catch (IOException ex)
                         {
-                            System.out.println("NO funcina");
+                            System.out.println("No funcina");
                         }
                     } else if (request.isUserInRole("almacenista"))
                     {
                         try
                         {
-                            ec.redirect(ec.getRequestContextPath() + "/Blockbuster/faces/view/Catalogo_Series.xhtml");
-                            context.getExternalContext().redirect("/Blockbuster/faces/view/Catalogo_Series.xhtml");
+                            context.getExternalContext().redirect(ec.getRequestContextPath() +"/faces/view/Catalogo_Series.xhtml");
                         } catch (IOException ex)
                         {
                             Logger.getLogger(LogBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,6 +137,8 @@ public class LogBean
 //                    System.out.println("No voy");
 //                    System.out.println("HOLA: "+session.getId());
 //                }
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "El usuario no existe", "Información"));
             }
         }
     }
@@ -251,7 +251,7 @@ public class LogBean
                 ec.redirect(ec.getRequestContextPath() + "/faces/view/Login.xhtml");
             } else
             {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente", "Informacion"));
+                //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente", "Informacion"));
 //            this.rol = (HttpSession) session.getAttribute("rol");
 //            this.ap = (HttpSession) session.getAttribute("ap");
 //            this.ap = (HttpSession) session.getAttribute("ap");
