@@ -79,7 +79,7 @@
                             <p:column>
                                 <h:outputText value="Tarjeta"/><br/><br/><br/>
                                 <h:outputText value="Contraseña"/><br/><br/><br/>
-                                <h:outputText value="Fecha caducidad"/><br/><br/><br/>
+                                <!--<h:outputText value="Fecha caducidad"/><br/><br/><br/>-->
                                 <h:outputText value="CVV"/>
                             </p:column>
                             <p:column>
@@ -90,11 +90,6 @@
                                 </p:inputText>
                                 <br/>
                                 <p:inputText type="password" value="#{datosPagoBean.contraseña}" requiredMessage="La contraseña es requerida">
-                                </p:inputText>
-                                <br/>
-                                <!--<p:calendar value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido"pattern="yyyy-MM-dd" />-->
-                                <p:inputText value="#{datosPagoBean.fecha_expiracion}" validatorMessage="La fecha no es valida">
-                                    
                                 </p:inputText>
                                 <br/>
                                 <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="El campo CVV es requerido, recuerda el código tiene de 3 a 4 digitos">
