@@ -2,6 +2,7 @@ package modelo;
 
 import controlador.CarritoProductoFacade;
 import controlador.CarritosFacade;
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -41,8 +42,16 @@ public class OpcionesCarritoBean {
         return "Home";
     }
 
-    public String confirmar() {
-        return "confirmar";
+    public void confirmar() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        if (session.getAttribute("idCarrito").equals(0)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No tienes nada en el carrito", "Información"));
+        }else{
+            FacesContext contex = FacesContext.getCurrentInstance();
+            contex.getExternalContext().redirect(ec.getRequestContextPath() + "/faces/view/confirmar.xhtml");
+        }
     }
 
 }

@@ -30,13 +30,13 @@ and open the template in the editor.
                             <p:panelGrid columns="4">
                                 <p:dataTable var="comp" value="#{historialBean.lista_compras}">
                                     <p:column headerText="Fecha de Compra">
-                                        <h:outputText value="#{comp.fechaCompra}"/>
+                                        <h:outputText value="#{historialBean.convertirFecha(comp.fechaCompra)}"/>
                                     </p:column>
-                                    <p:column headerText="Pago realizado">
-                                        <h:outputText value="#{comp.idDatosPago.tarjeta}"/>
+                                    <p:column headerText="Tarjeta">
+                                        <h:outputText value="#{historialBean.convertirTarjeta(comp.idDatosPago.tarjeta)}"/>
                                     </p:column>
                                     <p:column headerText="Total">
-                                        <h:outputText value="#{comp.totalCompra}"/>
+                                        <h:outputText value="$#{comp.totalCompra}"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:panelGrid>
@@ -46,16 +46,16 @@ and open the template in the editor.
                     <p:fieldset legend="Historial de rentas">
                         <p:dataTable var="rent" value="#{historialBean.lista_rentas}">
                             <p:column headerText="Fecha de Renta">               
-                                <h:outputText value="#{rent.fechaRenta}"/>                        
+                                <h:outputText value="#{historialBean.convertirFecha(rent.fechaRenta)}"/>                        
                             </p:column>
                             <p:column headerText="Fecha de Devolución">
-                                <h:outputText value="#{rent.fechaDevolucion}"/>
+                                <h:outputText value="#{historialBean.convertirFecha(rent.fechaDevolucion)}"/>
                             </p:column>
-                            <p:column headerText="Pago realizado">
-                                <h:outputText value="#{rent.idDatosPago.tarjeta}"/>
+                            <p:column headerText="Tarjeta">
+                                <h:outputText value="#{historialBean.convertirTarjeta(rent.idDatosPago.tarjeta)}"/>
                             </p:column>
                             <p:column headerText="Total">
-                                <h:outputText value="#{rent.totalRenta}"/>
+                                <h:outputText value="$#{rent.totalRenta}"/>
                             </p:column>
                         </p:dataTable>
                     </p:fieldset>

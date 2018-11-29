@@ -24,6 +24,10 @@ public class CatalogoBean {
     private List<Productos> categoria1;
     private List<Productos> categoria2;
     private List<Productos> categoria3;
+    
+    private List<Productos> categoria4;
+    private List<Productos> categoria5;
+    private List<Productos> categoria6;
 
     private List<Productos> pelis;
     private List<Productos> series;
@@ -31,8 +35,11 @@ public class CatalogoBean {
     public CatalogoBean() {
         productoFacade = new ProductosFacade();
         setCategoria1(productoFacade.listaCategoria1());
-        setCategoria2(productoFacade.listaCategoria5());
-        setCategoria3(productoFacade.listaCategoria4());
+        setCategoria2(productoFacade.listaCategoria2());
+        setCategoria3(productoFacade.listaCategoria3());
+        setCategoria4(productoFacade.listaCategoria4());
+        setCategoria5(productoFacade.listaCategoria5());
+        setCategoria6(productoFacade.listaCategoria6());
         
         setPelis(productoFacade.listaPelis());
         setSeries(productoFacade.listaSeries());
@@ -133,5 +140,30 @@ public class CatalogoBean {
     public void setSeries(List<Productos> series) {
         this.series = series;
     }
+
+    public List<Productos> getCategoria4() {
+        return categoria4;
+    }
+
+    public void setCategoria4(List<Productos> categoria4) {
+        this.categoria4 = categoria4;
+    }
+
+    public List<Productos> getCategoria5() {
+        return categoria5;
+    }
+
+    public void setCategoria5(List<Productos> categoria5) {
+        this.categoria5 = categoria5;
+    }
+
+    public List<Productos> getCategoria6() {
+        return categoria6;
+    }
+
+    public void setCategoria6(List<Productos> categoria6) {
+        this.categoria6 = categoria6;
+    }
+    
     
 }

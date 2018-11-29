@@ -1,4 +1,3 @@
-
 package modelo;
 
 import controlador.ComprasFacade;
@@ -12,6 +11,9 @@ import entidad.DetalleRenta;
 import entidad.Productos;
 import entidad.Rentas;
 import entidad.Usuarios;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -21,27 +23,27 @@ import javax.servlet.http.HttpSession;
 @Named(value = "historialBean")
 @RequestScoped
 public class HistorialBean {
-    
+
     private HttpSession session;
 
     DetalleRentaFacade detalleRFacade;
     DetalleCompraFacade detalleCFacade;
-    
+
     ComprasFacade compraFacade;
     RentasFacade rentaFacade;
-    
+
     private List<Compras> lista_compras;
     private List<Rentas> lista_rentas;
-    
+
     private double total_compra;
     private double total_renta;
-    
+
     public HistorialBean() {
         UsuariosFacade usuarioFacade = new UsuariosFacade();
         FacesContext context = FacesContext.getCurrentInstance();
         session = (HttpSession) context.getExternalContext().getSession(false);
         Usuarios idUser = usuarioFacade.buscarPorcorreo2(session.getAttribute("email").toString());
-        
+
         compraFacade = new ComprasFacade();
         rentaFacade = new RentasFacade();
         this.lista_compras = compraFacade.listaCompras(idUser);
@@ -79,7 +81,22 @@ public class HistorialBean {
     public void setTotal_renta(double total_renta) {
         this.total_renta = total_renta;
     }
+
+    public String convertirFecha(Date fecha) {
+        DateFormat dfDateInstance = DateFormat.getDateInstance();
+        System.out.println("getDateInstance()=" + dfDateInstance.format(fecha));
+        return dfDateInstance.format(fecha);
+    }
     
-    
-    
+    public String convertirTarjeta(String tarjeta){
+        int longitud = tarjeta.length();
+        String key = "";
+        for (int i = 0; i < longitud-4; i++) {
+            key = key +"*";
+        }
+        for (int i = longitud-4; i < longitud; i++) {
+            key = key+tarjeta.charAt(i);
+        }
+        return key;
+    }
 }

@@ -4,12 +4,17 @@ import static com.sun.faces.facelets.util.Path.context;
 import controlador.UsuarioPojo;
 import controlador.UsuariosFacade;
 import entidad.Usuarios;
+import java.security.MessageDigest;
+import java.util.Arrays;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-
+import org.apache.commons.codec.binary.Base64;
 import javax.servlet.http.HttpSession;
 
 @Named(value = "registroBean")
@@ -27,7 +32,7 @@ public class RegistroBean {
     private String municipio;
     private String cp;
     private String celular;
-    private String telefono_fijo="00000";
+    private String telefono_fijo = "00000";
     private int no_int;
     private int no_ext;
     private String rol;
@@ -202,7 +207,8 @@ public class RegistroBean {
             user.setColonia(colonia);
             user.setMunicipio(municipio);
             user.setCp(cp);
-            user.setContraseña(contraseña);
+//            user.setContraseña(contraseña);
+            user.setContraseña(encripta(contraseña));
             user.setApellidoM(apellidoM);
             user.setApellidoP(apellidoP);
             user.setCalle(calle);
@@ -216,14 +222,13 @@ public class RegistroBean {
             user.setRol("comprador");
             if (usuarioFacade.crearUsuario(user)) {
                 System.out.println("yeahhhhhhhhhhhhhhhhhhhhhh");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Registro Existoso", "Información"));
                 try {
                     FacesContext contex = FacesContext.getCurrentInstance();
-                    contex.getExternalContext().redirect("/Blockbuster/faces/view/Login.xhtml");
+                    contex.getExternalContext().redirect(ec.getRequestContextPath() + "/faces/view/Login.xhtml");
                 } catch (Exception e) {
                     System.out.println("No voy");
                 }
-            }else{
+            } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Ya existe un usuario con ese correo", "Información"));
             }
         }
@@ -275,6 +280,58 @@ public class RegistroBean {
         } catch (Exception e) {
             System.out.println("Me voy al carajo, no funciona esta redireccion");
         }
+    }
 
+    public String encripta(String cadena) {
+        String texto = cadena;
+        System.out.println("Esta es sin encriptar: " + texto);
+        String secretKey = "qualityinfosolutions"; //llave para encriptar datos
+        String base64EncryptedString = "";
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.encodeBase64(buf);
+            base64EncryptedString = new String(base64Bytes);
+
+        } catch (Exception ex) {
+        }
+        System.out.println("Esta es encriptada " + base64EncryptedString);
+        return base64EncryptedString;
+    }
+
+    public String Desencriptar(String textoEncriptado) {
+        String secretKey = "qualityinfosolutions"; //llave para desenciptar datos
+        String base64EncryptedString = "";
+
+        try {
+            byte[] message = Base64.decodeBase64(textoEncriptado.getBytes("utf-8"));
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            base64EncryptedString = new String(plainText, "UTF-8");
+
+            System.out.println("Esta es desencriptada 1" + base64EncryptedString);
+        } catch (Exception ex) {
+            System.out.println("Esta es desencriptada 2" + base64EncryptedString);
+        }
+        System.out.println("Esta es desencriptada 12" + base64EncryptedString);
+        return base64EncryptedString;
     }
 }

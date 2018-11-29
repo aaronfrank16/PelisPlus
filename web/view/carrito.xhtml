@@ -34,7 +34,7 @@
                                     </p:column>
 
                                     <p:column headerText="Precio">
-                                        <h:outputText value="#{comp.subtotal}" />
+                                        <h:outputText value="$#{comp.subtotal}" />
                                     </p:column>
 
                                 </p:dataTable>
@@ -50,7 +50,7 @@
                                     </p:column>
 
                                     <p:column headerText="Precio">
-                                        <h:outputText value="#{comp.subtotal}" />
+                                        <h:outputText value="$#{comp.subtotal}" />
                                     </p:column>
 
                                 </p:dataTable>
@@ -70,6 +70,7 @@
                     </h:panelGroup>
                     <br/>
                     <h:form>
+                        <p:growl autoUpdate="true" sticky="true" id="growl" showDetail="true"/>
                         <p:commandLink value="Confirmar Compra" styleClass="btn btn-large" style="background-color: #00C853;font-size: 12pt;color: white" action="#{opcionesCarritoBean.confirmar()}" />
                         <p:commandLink value="Vaciar Carrito" styleClass="btn btn-large" style="background-color: #FF1744;font-size: 12pt;margin-left: 10px;color: white" action="#{opcionesCarritoBean.vaciar()}"/>
                     </h:form>
