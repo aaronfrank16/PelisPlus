@@ -113,4 +113,8 @@ public class ProductosFacade {
         }
     
     }
+
+    public List<Productos> listaCategoria6() {
+        return productoJpa.getCategorias(6);
+    }
 }

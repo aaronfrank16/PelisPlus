@@ -104,10 +104,9 @@ public class DatosPagoBean {
         UsuariosFacade usuarioDes = new UsuariosFacade();
         System.out.println("Entre en confirmation------------------------");
         System.out.println("ES AQUI DONDE NO COMPARA BIEN LAS CONTRASEÑAS");
-        String contraDes = usuarioDes.Desencriptar(contraseña);
-        System.out.println("Contraseña ingresada en el formulario "+contraDes);
+        System.out.println("Contraseña ingresada en el formulario "+contraseña);
         System.out.println("Contraseña en la base de datos "+usuarioDes.Desencriptar(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña()));
-        if (contraDes.equals(usuarioDes.Desencriptar(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña()))) {
+        if (contraseña.equals(usuarioDes.Desencriptar(usuarioFacade.buscarPorcorreo(session.getAttribute("email").toString()).getContraseña()))) {
             System.out.println("Entre a esta madre");
             DatosPagoPojo datosPojo = new DatosPagoPojo();
             datosFacade = new DatosPagoFacade();
