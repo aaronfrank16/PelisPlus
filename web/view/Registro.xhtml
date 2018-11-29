@@ -94,7 +94,7 @@ and open the template in the editor.
                                             <div class="input-field col s6">
                                                 <p:outputLabel for="txtCalle" value="Calle"/>
                                                 <p:inputText id="txtCalle" value="#{registroBean.calle}" required="true" validatorMessage="Solo se permiten uno o un par de numeros, letras, acentos y espacios" >
-                                                    <f:validateRegex pattern="^([0-9]{1,2}[\s]+)*[a-zA-Z\u00E0-\u00FC]+([\s]*[a-zA-Z\u00E0-\u00FC]*)*[a-zA-Z\u00E0-\u00FC]+$"/>
+                                                    <f:validateRegex pattern="^([0-9]{1,2}[\s]+)?[a-zA-Z\u00E0-\u00FC]+([\s]*[a-zA-Z\u00E0-\u00FC]*)*[a-zA-Z\u00E0-\u00FC]+$"/>
                                                     <p:clientValidator/>
                                                 </p:inputText>
                                                 <p:message for="txtCalle"/>
@@ -142,8 +142,8 @@ and open the template in the editor.
                                             </div>
                                             <div class="input-field col s6">
                                                 <p:outputLabel for="txtCol" value="Colonia"/>
-                                                <p:inputText id="txtCol" value="#{registroBean.colonia}" required="true" requiredMessage="Campo Requerido" validatorMessage="Numero invalido">
-                                                   <f:validateRegex pattern="^([0-9]{1,2}[\s]+)[a-zA-Z\u00E0-\u00FC]+([\s]*[a-zA-Z\u00E0-\u00FC]*)*[a-zA-Z\u00E0-\u00FC]+$"/>
+                                                <p:inputText id="txtCol" value="#{registroBean.colonia}" required="true"  validatorMessage="Numero invalido">
+                                                   <f:validateRegex pattern="^([0-9]{1,2}[\s]+)?[a-zA-Z\u00E0-\u00FC]+([\s]*[a-zA-Z\u00E0-\u00FC]*)*[a-zA-Z\u00E0-\u00FC]+$"/>
                                                     <p:clientValidator/>
                                                 </p:inputText>  
                                                 <p:message for="txtCol"/>
