@@ -74,6 +74,7 @@
                 <h:form>
 
                     <p:fieldset legend="Datos de pago">
+                        <p:messages id="messages" autoUpdate="true"/>
                         <p:dataTable value="DatosPago">
                             <p:column>
                                 <h:outputText value="Tarjeta"/><br/><br/><br/>
@@ -83,20 +84,20 @@
                             </p:column>
                             <p:column>
                                 <p:inputText value="#{datosPagoBean.tarjeta}"  validatorMessage="La tarjeta incluye entre 16 a 18 numeros">
-                                    <f:validateLength minimum="16" maximum="16"/>
+                                    <f:validateLength minimum="16" maximum="18"/>
                                     <f:validateRegex pattern="^[0-9]+$"/>
                                     <p:clientValidator/>
                                 </p:inputText>
                                 <br/>
-                                <p:inputText type="password" value="#{datosPagoBean.contraseña}" requiredMessage="Campo requerido">
+                                <p:inputText type="password" value="#{datosPagoBean.contraseña}" requiredMessage="La contraseña es requerida">
                                 </p:inputText>
                                 <br/>
                                 <!--<p:calendar value="#{datosPagoBean.fecha_expiracion}" requiredMessage="Campo requerido"pattern="yyyy-MM-dd" />-->
                                 <p:inputText value="#{datosPagoBean.fecha_expiracion}" validatorMessage="La fecha no es valida">
-                                    <f:convertDateTime pattern="yyyy/MM/dd"/>  
+                                    
                                 </p:inputText>
                                 <br/>
-                                <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="Campo requerido">
+                                <p:inputText value="#{datosPagoBean.codigo_seguridad}" validatorMessage="El campo CVV es requerido, recuerda el código tiene de 3 a 4 digitos">
                                    <f:validateLength minimum="3" maximum="4"/>
                                    <f:validateRegex pattern="^[0-9]+$"/>
                                    <p:clientValidator/>
